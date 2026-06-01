@@ -21,7 +21,7 @@
 <link rel="manifest" href="/site.webmanifest?v=20260601b">
 <meta name="theme-color" content="#1c2840">
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260601d">
+<link rel="stylesheet" href="styles.css?v=20260601e">
 </head>
 <body>
 
@@ -73,11 +73,11 @@
     <span class="eyebrow">Bespoke Digital Studio</span>
     <h1>We build software that makes the journey<br><em>effortless.</em></h1>
     <p class="hero-sub">Barrier Island Digital is an independent studio crafting refined, mobile-first travel companions and digital products — from a single curated itinerary to a full planning platform.</p>
-    <ul class="hero-tags" aria-label="What we build">
-      <li>Travel companions</li>
-      <li>Mobile-first PWAs</li>
-      <li>Edge-deployed apps</li>
-    </ul>
+    <div class="hero-tags" role="list" aria-label="What we build — tap to explore">
+      <button class="hero-tag" role="listitem" data-jump="svc-travel">Travel companions<span class="tag-plus">+</span></button>
+      <button class="hero-tag" role="listitem" data-jump="svc-product">Mobile-first PWAs<span class="tag-plus">+</span></button>
+      <button class="hero-tag" role="listitem" data-jump="svc-edge">Edge-deployed apps<span class="tag-plus">+</span></button>
+    </div>
     <div class="hero-cta">
       <a href="#work" class="btn btn-primary btn-lg">See our work</a>
       <a href="#contact" class="btn btn-ghost btn-lg">Start a project</a>
@@ -135,7 +135,7 @@
       <p>A small studio with a full-stack toolkit — from concept and design through deployment on modern edge infrastructure.</p>
     </div>
     <div class="services-grid">
-      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
+      <article class="service reveal" id="svc-travel" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <h3>Travel companions</h3>
         <p>Bespoke, mobile-first itinerary apps — day-by-day plans, maps, weather, dining, and logistics — built as installable progressive web apps.</p>
@@ -149,7 +149,7 @@
           <div class="meter"><span class="meter-label">Offline-ready</span><div class="bar"><i style="width:88%"></i></div></div>
         </div>
       </article>
-      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
+      <article class="service reveal" id="svc-product" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg></div>
         <h3>Product engineering</h3>
         <p>Full-stack web applications in React and TypeScript, with API integrations, data pipelines, and clean, maintainable architecture.</p>
@@ -162,7 +162,7 @@
           <p class="reveal-note">Type-safe front to back, with clean architecture that stays maintainable as products grow.</p>
         </div>
       </article>
-      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
+      <article class="service reveal" id="svc-edge" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
         <h3>Edge deployment</h3>
         <p>Continuous delivery on Cloudflare Pages and Workers — fast, global, secure, with CI/CD pipelines wired from day one.</p>
@@ -363,11 +363,11 @@
     <div class="footer-legal">
       <span>© <span id="year"></span> Barrier Island Digital, LLC. All rights reserved.</span>
       <span>Seaside Park, New Jersey · barrierislanddigital.com</span>
-      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-01T22:42:37Z"></span></span>
+      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-01T22:52:27Z"></span></span>
     </div>
   </div>
 </footer>
 
-<script src="main.js?v=20260601d"></script>
+<script src="main.js?v=20260601e"></script>
 </body>
 </html>

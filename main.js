@@ -60,6 +60,29 @@ document.querySelectorAll('[data-card]').forEach(card => {
   });
 });
 
+// ===== Hero capability pills -> jump to + open matching service card =====
+(function () {
+  const pills = document.querySelectorAll('.hero-tag[data-jump]');
+  if (!pills.length) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const target = document.getElementById(pill.getAttribute('data-jump'));
+      if (!target) return;
+      // ensure the reveal animation isn't keeping it hidden
+      target.classList.add('in');
+      // open the card (matches click-to-reveal pattern)
+      target.setAttribute('aria-expanded', 'true');
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      // brief highlight flash
+      target.classList.remove('jump-flash');
+      void target.offsetWidth; // restart animation
+      target.classList.add('jump-flash');
+      setTimeout(() => target.classList.remove('jump-flash'), 1400);
+    });
+  });
+})();
+
 // ===== Live weather rotator (Open-Meteo, keyless) =====
 (function () {
   const rotator = document.getElementById('weatherRotator');
