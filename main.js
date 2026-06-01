@@ -22,11 +22,23 @@ mb && mb.addEventListener('click', () => {
 });
 mm && mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { mm.classList.remove('open'); mb.setAttribute('aria-expanded', false); }));
 
-// ===== Scroll reveal =====
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 4 * 70) + 'ms'; io.observe(el); });
+// ===== Scroll reveal (progressive enhancement) =====
+// Mark JS active so CSS hides .reveal only when JS can un-hide it.
+document.documentElement.classList.add('js');
+(function () {
+  const items = Array.from(document.querySelectorAll('.reveal'));
+  const show = el => el.classList.add('in');
+  if (!('IntersectionObserver' in window)) { items.forEach(show); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  items.forEach((el, i) => { el.style.transitionDelay = (i % 4 * 70) + 'ms'; io.observe(el); });
+  // Safety net: anything still hidden shortly after full load gets revealed
+  // (covers fast scroll, deep links, print, and headless screenshots).
+  function sweep() { items.forEach(el => { if (!el.classList.contains('in')) { el.style.transitionDelay = '0ms'; show(el); io.unobserve(el); } }); }
+  addEventListener('load', () => setTimeout(sweep, 1200));
+  window.matchMedia('print').addEventListener('change', e => { if (e.matches) items.forEach(show); });
+})();
 
 // ===== Year =====
 document.getElementById('year').textContent = new Date().getFullYear();
@@ -95,39 +107,55 @@ document.querySelectorAll('[data-card]').forEach(card => {
   });
 })();
 
-// ===== Rotating field-note =====
-(function () {
-  const el = document.getElementById('fieldNote');
-  if (!el) return;
-  const notes = [
+// ===== Editable content (content.json) drives field-notes, now-building, and spotlight =====
+// Fallbacks below are used if content.json fails to load, so the page never breaks.
+const CONTENT_FALLBACK = {
+  fieldNotes: [
     'Understand the journey, then remove every point of friction.',
     'Mobile-first — because travel happens in the dead zones.',
     'Ship fast, then obsess over the details that feel effortless.',
     'The compass in our mark is a promise: we help people find their way.',
     'Every commit deploys to the edge — this site included.',
-  ];
+  ],
+  nowBuilding: 'Trip Optimizer',
+  spotlight: [
+    { title: 'Maritimes Grand Loop', fact: 'A 12-day loop through Newfoundland & Nova Scotia — ferries, fishing villages, and iceberg alley off the northern coast.', url: 'https://maritimesgrandloop.com' },
+    { title: 'Zürich Weekend', fact: 'Three days from Copenhagen to Zürich — lake, old town, and the alps, with logistics tuned to the minute.', url: 'https://zurich-weekend.com' },
+    { title: 'Santa Fe June', fact: 'Seven nights at 7,200 feet — adobe, galleries, cliff dwellings, and a dawn balloon ride over the high desert.', url: 'https://santafejune.com' },
+  ],
+};
+
+function initContent(c) {
+  initFieldNote(Array.isArray(c.fieldNotes) && c.fieldNotes.length ? c.fieldNotes : CONTENT_FALLBACK.fieldNotes);
+  initNowBuilding(c.nowBuilding || CONTENT_FALLBACK.nowBuilding);
+  initSpotlight(Array.isArray(c.spotlight) && c.spotlight.length ? c.spotlight : CONTENT_FALLBACK.spotlight);
+}
+
+function initNowBuilding(label) {
+  const el = document.getElementById('nowBuilding');
+  if (el) el.textContent = 'Currently building: ' + label;
+}
+
+function initFieldNote(notes) {
+  const el = document.getElementById('fieldNote');
+  if (!el) return;
   let i = 0;
-  function set() { el.textContent = notes[i % notes.length]; }
+  const set = () => { el.textContent = notes[i % notes.length]; };
   set();
-  setInterval(() => {
+  if (notes.length > 1) setInterval(() => {
     el.classList.add('fade');
     setTimeout(() => { i++; set(); el.classList.remove('fade'); }, 450);
   }, 5200);
-})();
+}
 
-// ===== Destination spotlight rotator =====
-(function () {
+function initSpotlight(items) {
   const body = document.getElementById('spotlightBody');
   const dotsWrap = document.getElementById('spotlightDots');
   if (!body || !dotsWrap) return;
   const titleEl = document.getElementById('spTitle');
   const factEl = document.getElementById('spFact');
   const linkEl = document.getElementById('spLink');
-  const spots = [
-    { t: 'Maritimes Grand Loop', f: 'A 12-day loop through Newfoundland & Nova Scotia — ferries, fishing villages, and iceberg alley off the northern coast.', u: 'https://maritimesgrandloop.com' },
-    { t: 'Zürich Weekend', f: 'Three days from Copenhagen to Zürich — lake, old town, and the alps, with logistics tuned to the minute.', u: 'https://zurich-weekend.com' },
-    { t: 'Santa Fe June', f: 'Seven nights at 7,200 feet — adobe, galleries, cliff dwellings, and a dawn balloon ride over the high desert.', u: 'https://santafejune.com' },
-  ];
+  const spots = items.map(s => ({ t: s.title, f: s.fact, u: s.url }));
   let i = 0, timer;
   function render(idx, animate) {
     i = (idx + spots.length) % spots.length;
@@ -142,14 +170,31 @@ document.querySelectorAll('[data-card]').forEach(card => {
     };
     if (animate) { body.classList.add('fade'); setTimeout(swap, 450); } else swap();
   }
+  dotsWrap.innerHTML = '';
   spots.forEach((s, n) => {
     const b = document.createElement('button');
     b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-label', s.t);
     b.addEventListener('click', () => { render(n, true); restart(); });
     dotsWrap.appendChild(b);
   });
-  function restart() { clearInterval(timer); timer = setInterval(() => render(i + 1, true), 6000); }
+  function restart() { clearInterval(timer); if (spots.length > 1) timer = setInterval(() => render(i + 1, true), 6000); }
   render(0, false); restart();
+}
+
+fetch('content.json', { cache: 'no-cache' })
+  .then(r => r.ok ? r.json() : Promise.reject())
+  .then(c => initContent(c))
+  .catch(() => initContent(CONTENT_FALLBACK));
+
+// ===== Footer: last deployed timestamp (BUILD_TIME injected at deploy) =====
+(function () {
+  const el = document.getElementById('lastDeployed');
+  if (!el) return;
+  const raw = el.getAttribute('data-build');
+  if (!raw || raw.indexOf('BUILD') === 0) { el.parentElement && el.parentElement.remove(); return; }
+  const d = new Date(raw);
+  if (isNaN(d)) { el.parentElement && el.parentElement.remove(); return; }
+  el.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 })();
 
 // ===== Canvas project visuals: branded navy gradient + compass/wave motif =====

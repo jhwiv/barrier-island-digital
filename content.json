@@ -1,0 +1,28 @@
+{
+  "_comment": "Edit this file to update the rotating field-notes and the destination spotlight without touching the JavaScript. Changes go live on the next push/deploy.",
+  "fieldNotes": [
+    "Understand the journey, then remove every point of friction.",
+    "Mobile-first — because travel happens in the dead zones.",
+    "Ship fast, then obsess over the details that feel effortless.",
+    "The compass in our mark is a promise: we help people find their way.",
+    "Every commit deploys to the edge — this site included."
+  ],
+  "nowBuilding": "Trip Optimizer",
+  "spotlight": [
+    {
+      "title": "Maritimes Grand Loop",
+      "fact": "A 12-day loop through Newfoundland & Nova Scotia — ferries, fishing villages, and iceberg alley off the northern coast.",
+      "url": "https://maritimesgrandloop.com"
+    },
+    {
+      "title": "Zürich Weekend",
+      "fact": "Three days from Copenhagen to Zürich — lake, old town, and the alps, with logistics tuned to the minute.",
+      "url": "https://zurich-weekend.com"
+    },
+    {
+      "title": "Santa Fe June",
+      "fact": "Seven nights at 7,200 feet — adobe, galleries, cliff dwellings, and a dawn balloon ride over the high desert.",
+      "url": "https://santafejune.com"
+    }
+  ]
+}
