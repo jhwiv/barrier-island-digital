@@ -197,3 +197,20 @@ fetch('content.json', { cache: 'no-cache' })
   el.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 })();
 
+
+/* --- live studio clock (Seaside Park, NJ / America/New_York) --- */
+(function () {
+  var el = document.getElementById('navClock');
+  if (!el) return;
+  function tick() {
+    try {
+      el.textContent = new Date().toLocaleTimeString('en-US', {
+        timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit'
+      }) + ' ET';
+    } catch (e) {
+      el.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+  }
+  tick();
+  setInterval(tick, 30000);
+})();

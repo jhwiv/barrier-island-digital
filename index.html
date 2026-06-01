@@ -21,7 +21,7 @@
 <link rel="manifest" href="/site.webmanifest?v=20260601b">
 <meta name="theme-color" content="#1c2840">
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260601b">
+<link rel="stylesheet" href="styles.css?v=20260601c">
 </head>
 <body>
 
@@ -39,6 +39,7 @@
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-right">
+      <span class="nav-clock" aria-label="Studio local time"><span class="nav-clock-loc">Seaside Park, NJ</span><span class="nav-clock-time" id="navClock">—</span></span>
       <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode"></button>
       <a href="#contact" class="btn btn-primary">Start a project</a>
       <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
@@ -56,6 +57,18 @@
 <!-- ============ Hero ============ -->
 <section class="hero">
   <div class="hero-bg"><img src="assets/hero-island.jpg" alt="A barrier island at blue hour, ocean on one side and a quiet bay on the other"></div>
+  <!-- drifting sea-line motion layer (decorative) -->
+  <div class="hero-motion" aria-hidden="true">
+    <svg class="sea-lines" viewBox="0 0 1440 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#9fd0d6" stroke-width="1">
+        <path class="sea-line" d="M-200 470 C 100 440, 260 500, 520 470 S 980 440, 1240 472 S 1640 500, 1840 470"/>
+        <path class="sea-line" d="M-200 500 C 120 470, 300 528, 540 500 S 1000 472, 1260 502 S 1660 528, 1840 500"/>
+        <path class="sea-line" d="M-200 530 C 140 502, 320 556, 560 530 S 1020 502, 1280 532 S 1680 556, 1840 530"/>
+        <path class="sea-line" d="M-200 560 C 160 534, 340 584, 580 560 S 1040 534, 1300 562 S 1700 584, 1840 560"/>
+      </g>
+    </svg>
+    <span class="hero-compass" aria-hidden="true"></span>
+  </div>
   <div class="wrap hero-inner">
     <span class="eyebrow">Bespoke Digital Studio</span>
     <h1>We build software that makes the journey<br><em>effortless.</em></h1>
@@ -67,9 +80,27 @@
   </div>
   <div class="hero-meta">
     <div class="wrap">
-      <div><strong>6+</strong><span>Products shipped</span></div>
-      <div><strong>3</strong><span>Continents covered</span></div>
+      <div><strong>3</strong><span>Sites live in production</span></div>
+      <div><strong>Edge</strong><span>Cloudflare-deployed</span></div>
       <div><strong>PWA</strong><span>Mobile-first, offline-ready</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Proof band: live in production ============ -->
+<section class="proofband" aria-label="Live in production">
+  <div class="wrap proof-inner">
+    <span class="proof-label">Live in production</span>
+    <div class="proof-sites">
+      <a class="proof-site" href="https://maritimesgrandloop.com" target="_blank" rel="noopener">
+        <span class="proof-dot"></span>maritimesgrandloop.com<span class="proof-arrow">↗</span>
+      </a>
+      <a class="proof-site" href="https://zurich-weekend.com" target="_blank" rel="noopener">
+        <span class="proof-dot"></span>zurich-weekend.com<span class="proof-arrow">↗</span>
+      </a>
+      <a class="proof-site" href="https://santafejune.com" target="_blank" rel="noopener">
+        <span class="proof-dot"></span>santafejune.com<span class="proof-arrow">↗</span>
+      </a>
     </div>
   </div>
 </section>
@@ -326,11 +357,11 @@
     <div class="footer-legal">
       <span>© <span id="year"></span> Barrier Island Digital, LLC. All rights reserved.</span>
       <span>Seaside Park, New Jersey · barrierislanddigital.com</span>
-      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-01T17:19:08Z"></span></span>
+      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-01T19:55:15Z"></span></span>
     </div>
   </div>
 </footer>
 
-<script src="main.js?v=20260601b"></script>
+<script src="main.js?v=20260601c"></script>
 </body>
 </html>
