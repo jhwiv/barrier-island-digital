@@ -21,7 +21,7 @@
 <link rel="manifest" href="/site.webmanifest?v=20260601b">
 <meta name="theme-color" content="#1c2840">
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260601f">
+<link rel="stylesheet" href="styles.css?v=20260601g">
 </head>
 <body>
 
@@ -93,33 +93,23 @@
   </div>
 </section>
 
-<!-- ============ Proof band: live in production ============ -->
-<section class="proofband" aria-label="Live in production">
-  <div class="wrap proof-inner">
-    <span class="proof-label">Live in production</span>
-    <div class="proof-sites">
-      <a class="proof-site" href="https://maritimesgrandloop.com" target="_blank" rel="noopener">
-        <span class="proof-dot"></span>maritimesgrandloop.com<span class="proof-arrow">↗</span>
-      </a>
-      <a class="proof-site" href="https://zurich-weekend.com" target="_blank" rel="noopener">
-        <span class="proof-dot"></span>zurich-weekend.com<span class="proof-arrow">↗</span>
-      </a>
-      <a class="proof-site" href="https://santafejune.com" target="_blank" rel="noopener">
-        <span class="proof-dot"></span>santafejune.com<span class="proof-arrow">↗</span>
-      </a>
+<!-- ============ Live bar: production proof + destination weather + studio note ============ -->
+<section class="livebar" aria-label="Studio live status">
+  <div class="wrap livebar-inner">
+    <div class="lb-block lb-proof">
+      <span class="lb-label">Live in production</span>
+      <div class="proof-sites">
+        <a class="proof-site" href="https://maritimesgrandloop.com" target="_blank" rel="noopener"><span class="proof-dot"></span>maritimesgrandloop.com<span class="proof-arrow">↗</span></a>
+        <a class="proof-site" href="https://zurich-weekend.com" target="_blank" rel="noopener"><span class="proof-dot"></span>zurich-weekend.com<span class="proof-arrow">↗</span></a>
+        <a class="proof-site" href="https://santafejune.com" target="_blank" rel="noopener"><span class="proof-dot"></span>santafejune.com<span class="proof-arrow">↗</span></a>
+      </div>
     </div>
-  </div>
-</section>
-
-<!-- ============ Live strip: weather + studio status ============ -->
-<section class="strip" aria-label="Studio live status">
-  <div class="wrap strip-inner">
-    <div class="strip-block weather" id="weatherStrip" aria-live="polite">
-      <span class="strip-label">In our destinations now</span>
+    <div class="lb-block lb-weather" id="weatherStrip" aria-live="polite">
+      <span class="lb-label">In our destinations now</span>
       <div class="weather-rotator" id="weatherRotator"><span class="wx skeleton">Loading conditions…</span></div>
     </div>
-    <div class="strip-block status">
-      <span class="strip-label">From the studio</span>
+    <div class="lb-block lb-status">
+      <span class="lb-label">From the studio</span>
       <div class="fieldnote" id="fieldNote" aria-live="polite">—</div>
       <div class="nowline"><span class="pulse"></span><span id="nowBuilding">Currently building: Trip Optimizer</span></div>
     </div>
@@ -212,7 +202,7 @@
           <p>The studio's core platform — a travel-planning engine that turns flights, hotels, and reservations into a clean, optimized day-by-day itinerary. The foundation every companion app is built on.</p>
           <div class="facts">
             <div class="fact"><b>Engine</b><span>Itinerary core</span></div>
-            <div class="fact"><b>5+</b><span>Apps powered</span></div>
+            <div class="fact"><b>Shared</b><span>Powers companions</span></div>
             <div class="fact"><b>React</b><span>+ TypeScript</span></div>
             <div class="fact"><b>PWA</b><span>Output format</span></div>
           </div>
@@ -363,11 +353,11 @@
     <div class="footer-legal">
       <span>© <span id="year"></span> Barrier Island Digital, LLC. All rights reserved.</span>
       <span>Seaside Park, New Jersey · barrierislanddigital.com</span>
-      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-01T23:00:27Z"></span></span>
+      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-01T23:21:35Z"></span></span>
     </div>
   </div>
 </footer>
 
-<script src="main.js?v=20260601f"></script>
+<script src="main.js?v=20260601g"></script>
 </body>
 </html>
