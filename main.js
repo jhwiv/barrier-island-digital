@@ -31,6 +31,127 @@ document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDel
 // ===== Year =====
 document.getElementById('year').textContent = new Date().getFullYear();
 
+// ===== Click-to-reveal cards =====
+document.querySelectorAll('[data-card]').forEach(card => {
+  function toggle() {
+    const open = card.getAttribute('aria-expanded') === 'true';
+    card.setAttribute('aria-expanded', String(!open));
+  }
+  card.addEventListener('click', (e) => {
+    // don't toggle when clicking a real link inside the card
+    if (e.target.closest('a')) return;
+    toggle();
+  });
+  card.addEventListener('keydown', (e) => {
+    if (e.target.closest('a')) return;
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+  });
+});
+
+// ===== Live weather rotator (Open-Meteo, keyless) =====
+(function () {
+  const rotator = document.getElementById('weatherRotator');
+  if (!rotator) return;
+  const cities = [
+    { name: 'Zürich', lat: 47.3769, lon: 8.5417 },
+    { name: 'Santa Fe', lat: 35.687, lon: -105.938 },
+    { name: 'Halifax', lat: 44.6488, lon: -63.5752 },
+    { name: 'Naples, FL', lat: 26.142, lon: -81.7948 },
+  ];
+  // WMO weather code -> [emoji, label]
+  function wmo(code) {
+    const m = {
+      0: ['☀️', 'Clear'], 1: ['🌤️', 'Mainly clear'], 2: ['⛅', 'Partly cloudy'], 3: ['☁️', 'Overcast'],
+      45: ['🌫️', 'Fog'], 48: ['🌫️', 'Rime fog'],
+      51: ['🌦️', 'Light drizzle'], 53: ['🌦️', 'Drizzle'], 55: ['🌦️', 'Heavy drizzle'],
+      61: ['🌧️', 'Light rain'], 63: ['🌧️', 'Rain'], 65: ['🌧️', 'Heavy rain'],
+      71: ['🌨️', 'Light snow'], 73: ['🌨️', 'Snow'], 75: ['❄️', 'Heavy snow'],
+      80: ['🌦️', 'Showers'], 81: ['🌧️', 'Showers'], 82: ['⛈️', 'Violent showers'],
+      95: ['⛈️', 'Thunderstorm'], 96: ['⛈️', 'Thunderstorm'], 99: ['⛈️', 'Thunderstorm'],
+    };
+    return m[code] || ['🌐', 'Conditions'];
+  }
+  let data = [];
+  Promise.all(cities.map(c =>
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit`)
+      .then(r => r.ok ? r.json() : null)
+      .then(j => j && j.current ? { name: c.name, temp: Math.round(j.current.temperature_2m), code: j.current.weather_code } : null)
+      .catch(() => null)
+  )).then(results => {
+    data = results.filter(Boolean);
+    if (!data.length) { rotator.innerHTML = '<span class="wx skeleton">Weather unavailable</span>'; return; }
+    let i = 0;
+    function render() {
+      const d = data[i % data.length];
+      const [ico, label] = wmo(d.code);
+      rotator.innerHTML = `<span class="wx"><span class="wx-ico">${ico}</span><span class="wx-city">${d.name}</span><span class="wx-temp">${d.temp}°F</span><span class="wx-cond">${label}</span></span>`;
+    }
+    render();
+    if (data.length > 1) setInterval(() => {
+      const el = rotator.querySelector('.wx');
+      if (el) el.classList.add('fade');
+      setTimeout(() => { i++; render(); }, 450);
+    }, 4200);
+  });
+})();
+
+// ===== Rotating field-note =====
+(function () {
+  const el = document.getElementById('fieldNote');
+  if (!el) return;
+  const notes = [
+    'Understand the journey, then remove every point of friction.',
+    'Mobile-first — because travel happens in the dead zones.',
+    'Ship fast, then obsess over the details that feel effortless.',
+    'The compass in our mark is a promise: we help people find their way.',
+    'Every commit deploys to the edge — this site included.',
+  ];
+  let i = 0;
+  function set() { el.textContent = notes[i % notes.length]; }
+  set();
+  setInterval(() => {
+    el.classList.add('fade');
+    setTimeout(() => { i++; set(); el.classList.remove('fade'); }, 450);
+  }, 5200);
+})();
+
+// ===== Destination spotlight rotator =====
+(function () {
+  const body = document.getElementById('spotlightBody');
+  const dotsWrap = document.getElementById('spotlightDots');
+  if (!body || !dotsWrap) return;
+  const titleEl = document.getElementById('spTitle');
+  const factEl = document.getElementById('spFact');
+  const linkEl = document.getElementById('spLink');
+  const spots = [
+    { t: 'Maritimes Grand Loop', f: 'A 12-day loop through Newfoundland & Nova Scotia — ferries, fishing villages, and iceberg alley off the northern coast.', u: 'https://maritimesgrandloop.com' },
+    { t: 'Zürich Weekend', f: 'Three days from Copenhagen to Zürich — lake, old town, and the alps, with logistics tuned to the minute.', u: 'https://zurich-weekend.com' },
+    { t: 'Santa Fe June', f: 'Seven nights at 7,200 feet — adobe, galleries, cliff dwellings, and a dawn balloon ride over the high desert.', u: 'https://santafejune.com' },
+  ];
+  let i = 0, timer;
+  function render(idx, animate) {
+    i = (idx + spots.length) % spots.length;
+    const s = spots[i];
+    const swap = () => {
+      titleEl.textContent = s.t; factEl.textContent = s.f; linkEl.href = s.u;
+      dotsWrap.querySelectorAll('button').forEach((b, n) => {
+        b.classList.toggle('active', n === i);
+        b.setAttribute('aria-selected', String(n === i));
+      });
+      body.classList.remove('fade');
+    };
+    if (animate) { body.classList.add('fade'); setTimeout(swap, 450); } else swap();
+  }
+  spots.forEach((s, n) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-label', s.t);
+    b.addEventListener('click', () => { render(n, true); restart(); });
+    dotsWrap.appendChild(b);
+  });
+  function restart() { clearInterval(timer); timer = setInterval(() => render(i + 1, true), 6000); }
+  render(0, false); restart();
+})();
+
 // ===== Canvas project visuals: branded navy gradient + compass/wave motif =====
 function drawCanvas(cv) {
   const seed = parseInt(cv.dataset.seed || '1', 10);

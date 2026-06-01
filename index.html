@@ -40,7 +40,7 @@
           <path d="M28 123 C41 114, 53 132, 66 123 S92 114, 105 123" opacity=".55"/>
         </g>
       </svg>
-      <span class="name">Barrier Island Digital<span>Software Studio · LLC</span></span>
+      <span class="name">Barrier Island Digital<span class="descriptor">Software Studio</span></span>
     </a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#services">Services</a>
@@ -84,6 +84,21 @@
   </div>
 </section>
 
+<!-- ============ Live strip: weather + studio status ============ -->
+<section class="strip" aria-label="Studio live status">
+  <div class="wrap strip-inner">
+    <div class="strip-block weather" id="weatherStrip" aria-live="polite">
+      <span class="strip-label">In our destinations now</span>
+      <div class="weather-rotator" id="weatherRotator"><span class="wx skeleton">Loading conditions…</span></div>
+    </div>
+    <div class="strip-block status">
+      <span class="strip-label">From the studio</span>
+      <div class="fieldnote" id="fieldNote" aria-live="polite">—</div>
+      <div class="nowline"><span class="pulse"></span><span id="nowBuilding">Currently building: Trip Optimizer</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ Services ============ -->
 <section class="section" id="services">
   <div class="wrap">
@@ -93,25 +108,60 @@
       <p>A small studio with a full-stack toolkit — from concept and design through deployment on modern edge infrastructure.</p>
     </div>
     <div class="services-grid">
-      <article class="service reveal">
+      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <h3>Travel companions</h3>
         <p>Bespoke, mobile-first itinerary apps — day-by-day plans, maps, weather, dining, and logistics — built as installable progressive web apps.</p>
+        <span class="card-hint">Tap for details</span>
+        <div class="card-reveal">
+          <div class="stat-row">
+            <div class="stat"><b>PWA</b><span>Installs to home screen</span></div>
+            <div class="stat"><b>Offline</b><span>Works without signal</span></div>
+          </div>
+          <div class="meter"><span class="meter-label">Mobile-first</span><div class="bar"><i style="width:96%"></i></div></div>
+          <div class="meter"><span class="meter-label">Offline-ready</span><div class="bar"><i style="width:88%"></i></div></div>
+        </div>
       </article>
-      <article class="service reveal">
+      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg></div>
         <h3>Product engineering</h3>
         <p>Full-stack web applications in React and TypeScript, with API integrations, data pipelines, and clean, maintainable architecture.</p>
+        <span class="card-hint">Tap for the stack</span>
+        <div class="card-reveal">
+          <div class="chips">
+            <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Vite</span>
+            <span class="chip">Workers</span><span class="chip">KV</span><span class="chip">REST APIs</span>
+          </div>
+          <p class="reveal-note">Type-safe front to back, with clean architecture that stays maintainable as products grow.</p>
+        </div>
       </article>
-      <article class="service reveal">
+      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
         <h3>Edge deployment</h3>
         <p>Continuous delivery on Cloudflare Pages and Workers — fast, global, secure, with CI/CD pipelines wired from day one.</p>
+        <span class="card-hint">Tap for the pipeline</span>
+        <div class="card-reveal">
+          <ol class="pipeline">
+            <li><span class="dot"></span>Push to <b>git</b></li>
+            <li><span class="dot"></span>Auto <b>build</b></li>
+            <li><span class="dot"></span>Deploy to <b>edge</b></li>
+            <li><span class="dot"></span><b>Live</b> globally</li>
+          </ol>
+          <p class="reveal-note">Every commit ships automatically — this very site deploys on push.</p>
+        </div>
       </article>
-      <article class="service reveal">
+      <article class="service reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9 1.65 1.65 0 0 0 4.27 7.18l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
         <h3>Reusable systems</h3>
         <p>A shared component library and data modules — restaurants, lodging, transit — so every new product ships faster and stays consistent.</p>
+        <span class="card-hint">Tap for the modules</span>
+        <div class="card-reveal">
+          <div class="chips">
+            <span class="chip">Itinerary engine</span><span class="chip">Dining</span><span class="chip">Lodging</span>
+            <span class="chip">Transit</span><span class="chip">Maps</span><span class="chip">Weather</span>
+          </div>
+          <p class="reveal-note">Battle-tested modules reused across every companion app — quality compounds.</p>
+        </div>
       </article>
     </div>
   </div>
@@ -127,56 +177,101 @@
     </div>
     <div class="portfolio-grid">
 
-      <article class="project feature reveal">
+      <article class="project feature reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="project-visual"><span class="project-tag">Platform</span><canvas data-seed="1"></canvas></div>
         <div class="project-body">
           <h3>Trip Optimizer</h3>
           <div class="loc">The planning engine</div>
           <p>The studio's core platform — a travel-planning engine that turns flights, hotels, and reservations into a clean, optimized day-by-day itinerary. The foundation every companion app is built on.</p>
-          <span class="project-link muted">Internal platform</span>
+          <div class="facts">
+            <div class="fact"><b>Engine</b><span>Itinerary core</span></div>
+            <div class="fact"><b>5+</b><span>Apps powered</span></div>
+            <div class="fact"><b>React</b><span>+ TypeScript</span></div>
+            <div class="fact"><b>PWA</b><span>Output format</span></div>
+          </div>
+          <span class="project-link muted">Internal platform <span class="toggle-hint">· tap for details</span></span>
         </div>
       </article>
 
-      <article class="project half reveal">
+      <article class="project half reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="project-visual"><span class="project-tag">Live</span><canvas data-seed="2"></canvas></div>
         <div class="project-body">
           <h3>Maritimes Grand Loop</h3>
           <div class="loc">Newfoundland &amp; Nova Scotia</div>
           <p>A 12-day road-trip companion from Portland to Fogo Island — ferries, border crossings, and iceberg alley, all in one installable app.</p>
+          <div class="facts">
+            <div class="fact"><b>12</b><span>Days</span></div>
+            <div class="fact"><b>~1,400&nbsp;km</b><span>Driven</span></div>
+            <div class="fact"><b>3</b><span>Ferries</span></div>
+            <div class="fact"><b>Summer</b><span>Iceberg season</span></div>
+          </div>
           <a href="https://maritimesgrandloop.com" target="_blank" rel="noopener" class="project-link">Visit site <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
 
-      <article class="project third reveal">
+      <article class="project third reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="project-visual"><span class="project-tag">Live</span><canvas data-seed="3"></canvas></div>
         <div class="project-body">
           <h3>Zürich Weekend</h3>
           <div class="loc">Copenhagen → Zürich</div>
           <p>A curated three-day city break — mountain air, art, old town, and easy logistics — built as a father–daughter travel companion.</p>
+          <div class="facts">
+            <div class="fact"><b>3</b><span>Days</span></div>
+            <div class="fact"><b>CPH→ZRH</b><span>Route</span></div>
+            <div class="fact"><b>Old&nbsp;Town</b><span>+ lake &amp; alps</span></div>
+          </div>
           <a href="https://zurich-weekend.com" target="_blank" rel="noopener" class="project-link">Visit site <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
 
-      <article class="project third reveal">
+      <article class="project third reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="project-visual"><span class="project-tag">Live</span><canvas data-seed="4"></canvas></div>
         <div class="project-body">
           <h3>Santa Fe June</h3>
           <div class="loc">Santa Fe, New Mexico</div>
           <p>Seven nights of adobe, art, and altitude — galleries, cliff dwellings, a dawn balloon ride, and quiet dinners along Canyon Road.</p>
+          <div class="facts">
+            <div class="fact"><b>7</b><span>Nights</span></div>
+            <div class="fact"><b>7,200&nbsp;ft</b><span>Elevation</span></div>
+            <div class="fact"><b>June</b><span>Best light</span></div>
+          </div>
           <a href="https://santafejune.com" target="_blank" rel="noopener" class="project-link">Visit site <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </article>
 
-      <article class="project third reveal">
+      <article class="project third reveal" data-card tabindex="0" role="button" aria-expanded="false">
         <div class="project-visual"><span class="project-tag">Archive</span><canvas data-seed="5"></canvas></div>
         <div class="project-body">
           <h3>Naples &amp; Fort Myers</h3>
           <div class="loc">Southwest Florida</div>
           <p>A coastal Florida itinerary companion — dining, beaches, and logistics for a Gulf-coast getaway, archived after the trip.</p>
-          <span class="project-link muted">Completed trip</span>
+          <div class="facts">
+            <div class="fact"><b>Gulf</b><span>Coast</span></div>
+            <div class="fact"><b>Beaches</b><span>+ dining</span></div>
+            <div class="fact"><b>Archived</b><span>Post-trip</span></div>
+          </div>
+          <span class="project-link muted">Completed trip <span class="toggle-hint">· tap for details</span></span>
         </div>
       </article>
 
+    </div>
+  </div>
+</section>
+
+<!-- ============ Destination spotlight (rotating) ============ -->
+<section class="section spotlight-section" id="spotlight" style="padding-top:0">
+  <div class="wrap">
+    <div class="spotlight reveal">
+      <div class="spotlight-mark" aria-hidden="true">
+        <svg viewBox="0 0 130 140" fill="none"><circle cx="65" cy="58" r="42" fill="none" stroke="currentColor" stroke-width="6"/><polygon points="65,18 71,55 65,62 59,55" fill="currentColor"/><polygon points="103,58 71,64 65,58 71,52" fill="currentColor"/><polygon points="65,98 71,62 65,55 59,62" fill="currentColor"/><polygon points="27,58 59,64 65,58 59,52" fill="currentColor"/></svg>
+      </div>
+      <span class="eyebrow">Destination spotlight</span>
+      <div class="spotlight-body" id="spotlightBody" aria-live="polite">
+        <h2 id="spTitle">Maritimes Grand Loop</h2>
+        <p id="spFact">A 12-day loop through Newfoundland &amp; Nova Scotia — ferries, fishing villages, and iceberg alley.</p>
+        <a id="spLink" href="https://maritimesgrandloop.com" target="_blank" rel="noopener" class="btn btn-ghost">Explore the trip <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="spotlight-dots" id="spotlightDots" role="tablist" aria-label="Choose destination"></div>
     </div>
   </div>
 </section>
@@ -236,7 +331,7 @@
           <circle cx="65" cy="58" r="6.5" fill="none" stroke="currentColor" stroke-width="4"/>
           <g stroke="currentColor" fill="none" stroke-width="4.2" stroke-linecap="round"><path d="M22 108 C35 99, 47 117, 60 108 S86 99, 99 108 S121 116, 128 108"/></g>
         </svg>
-        <span class="name">Barrier Island Digital<span>Software Studio · LLC</span></span>
+        <span class="name">Barrier Island Digital<span class="descriptor">Software Studio</span></span>
       </a>
       <nav class="footer-links" aria-label="Footer">
         <a href="#services">Services</a><a href="#work">Work</a><a href="#about">About</a>
