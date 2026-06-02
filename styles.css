@@ -87,21 +87,21 @@ p{text-wrap:pretty;max-width:64ch}
 .section-head p{margin-top:var(--space-5);color:var(--color-text-muted);font-size:var(--text-lg)}
 
 /* ============ Header ============ */
-/* Header: transparent over the dark hero at the top, light surface once scrolled */
-.header{position:sticky;top:0;z-index:50;background:transparent;border-bottom:1px solid transparent;transition:border-color var(--transition),box-shadow var(--transition),background var(--transition),backdrop-filter var(--transition)}
-.header.scrolled{background:color-mix(in oklab,var(--color-bg) 86%,transparent);backdrop-filter:blur(14px);border-color:var(--color-divider);box-shadow:var(--shadow-sm)}
-/* At the top (over hero) force light-on-dark text */
-.header:not(.scrolled) .brand{color:#fff}
-.header:not(.scrolled) .brand .name .llc{color:rgba(255,255,255,.7)}
-.header:not(.scrolled) .nav-links a{color:rgba(255,255,255,.82)}
-.header:not(.scrolled) .nav-links a:hover{color:#fff}
-.header:not(.scrolled) .nav-clock-loc{color:rgba(255,255,255,.6)}
-.header:not(.scrolled) .nav-clock-time{color:rgba(255,255,255,.85)}
-.header:not(.scrolled) .theme-toggle{color:#fff}
-.header:not(.scrolled) .menu-btn{color:#fff}
+/* Header: solid navy bar, pinned at top, opaque so content scrolls underneath and out of sight. Color never changes on scroll. */
+.header{position:sticky;top:0;z-index:50;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08);transition:box-shadow var(--transition),border-color var(--transition)}
+.header.scrolled{box-shadow:0 6px 24px rgba(0,0,0,.28);border-bottom-color:rgba(255,255,255,.12)}
+/* Always light-on-dark text */
+.header .brand{color:#fff}
+.header .brand .name .llc{color:rgba(255,255,255,.7)}
+.header .nav-links a{color:rgba(255,255,255,.82)}
+.header .nav-links a:hover{color:#fff}
+.header .nav-clock-loc{color:rgba(255,255,255,.6)}
+.header .nav-clock-time{color:rgba(255,255,255,.85)}
+.header .theme-toggle{color:#fff}
+.header .menu-btn{color:#fff}
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
 .brand{display:flex;align-items:center;gap:var(--space-3);color:var(--color-text)}
-.brand .mark{width:34px;height:34px;flex:none;background-color:currentColor;color:var(--color-text);-webkit-mask:url(/assets/brand-mark.svg?v=20260601r) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601r) center/contain no-repeat}
+.brand .mark{width:34px;height:34px;flex:none;background-color:currentColor;color:var(--color-text);-webkit-mask:url(/assets/brand-mark.svg?v=20260601s) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601s) center/contain no-repeat}
 .brand .name{font-family:var(--font-display);font-size:1.18rem;font-weight:500;letter-spacing:-.01em;line-height:1.05}
 .brand .name .llc{font-size:.74em;font-weight:500;letter-spacing:.02em;color:var(--color-text-muted)}
 .brand .name .descriptor{display:block;font-family:var(--font-body);font-size:.6rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--color-text-faint);margin-top:3px;padding-top:3px;border-top:1px solid var(--color-divider)}
@@ -168,7 +168,7 @@ p{text-wrap:pretty;max-width:64ch}
 .sea-line:nth-child(3){animation-duration:38s;opacity:.3}
 .sea-line:nth-child(4){animation-duration:44s;opacity:.22}
 @keyframes seaDrift{from{transform:translateX(0)}to{transform:translateX(-400px)}}
-.hero-compass{position:absolute;top:50%;right:-120px;width:560px;height:560px;transform:translateY(-50%);background:currentColor;color:#ffffff;opacity:.05;-webkit-mask:url(/assets/brand-mark.svg?v=20260601r) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601r) center/contain no-repeat;animation:compassSpin 140s linear infinite}
+.hero-compass{position:absolute;top:50%;right:-120px;width:560px;height:560px;transform:translateY(-50%);background:currentColor;color:#ffffff;opacity:.05;-webkit-mask:url(/assets/brand-mark.svg?v=20260601s) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601s) center/contain no-repeat;animation:compassSpin 140s linear infinite}
 @keyframes compassSpin{from{transform:translateY(-50%) rotate(0)}to{transform:translateY(-50%) rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.sea-line,.hero-compass{animation:none}}
 /* --- nav clock --- */
