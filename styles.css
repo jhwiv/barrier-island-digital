@@ -101,7 +101,7 @@ p{text-wrap:pretty;max-width:64ch}
 .header:not(.scrolled) .menu-btn{color:#fff}
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
 .brand{display:flex;align-items:center;gap:var(--space-3);color:var(--color-text)}
-.brand .mark{width:34px;height:34px;flex:none;background-color:currentColor;color:var(--color-text);-webkit-mask:url(/assets/brand-mark.svg?v=20260601h) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601h) center/contain no-repeat}
+.brand .mark{width:34px;height:34px;flex:none;background-color:currentColor;color:var(--color-text);-webkit-mask:url(/assets/brand-mark.svg?v=20260601i) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601i) center/contain no-repeat}
 .brand .name{font-family:var(--font-display);font-size:1.18rem;font-weight:500;letter-spacing:-.01em;line-height:1.05}
 .brand .name .llc{font-size:.74em;font-weight:500;letter-spacing:.02em;color:var(--color-text-muted)}
 .brand .name .descriptor{display:block;font-family:var(--font-body);font-size:.6rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--color-text-faint);margin-top:3px;padding-top:3px;border-top:1px solid var(--color-divider)}
@@ -166,7 +166,7 @@ p{text-wrap:pretty;max-width:64ch}
 .sea-line:nth-child(3){animation-duration:38s;opacity:.3}
 .sea-line:nth-child(4){animation-duration:44s;opacity:.22}
 @keyframes seaDrift{from{transform:translateX(0)}to{transform:translateX(-400px)}}
-.hero-compass{position:absolute;top:50%;right:-120px;width:560px;height:560px;transform:translateY(-50%);background:currentColor;color:#ffffff;opacity:.05;-webkit-mask:url(/assets/brand-mark.svg?v=20260601h) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601h) center/contain no-repeat;animation:compassSpin 140s linear infinite}
+.hero-compass{position:absolute;top:50%;right:-120px;width:560px;height:560px;transform:translateY(-50%);background:currentColor;color:#ffffff;opacity:.05;-webkit-mask:url(/assets/brand-mark.svg?v=20260601i) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601i) center/contain no-repeat;animation:compassSpin 140s linear infinite}
 @keyframes compassSpin{from{transform:translateY(-50%) rotate(0)}to{transform:translateY(-50%) rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.sea-line,.hero-compass{animation:none}}
 /* --- nav clock --- */
@@ -328,8 +328,13 @@ p{text-wrap:pretty;max-width:64ch}
   .hero .eyebrow{font-size:.66rem;letter-spacing:.16em}
   .hero h1{font-size:clamp(2rem,8.5vw,2.6rem);line-height:1.08;margin-top:var(--space-4)}
   .hero-sub{font-size:var(--text-base);margin-top:var(--space-5)}
-  .hero-cta{flex-direction:column;margin-top:var(--space-8)}
-  .hero-cta .btn{justify-content:center;padding:.85rem 1.25rem}
+  /* tighter rhythm: pull the primary action up close to the pills, content-sized buttons, clear hierarchy */
+  .hero-cta{flex-direction:column;align-items:flex-start;margin-top:var(--space-6);gap:var(--space-3)}
+  .hero-cta .btn{align-self:flex-start;justify-content:center;padding:.78rem 1.6rem;width:auto}
+  .hero-cta .btn-primary{min-width:min(15rem,80%)}
+  /* secondary action reads as a lighter text link, not a second heavy button */
+  .hero-cta .btn-ghost{padding-inline:0;border:none;background:none;font-size:var(--text-sm);letter-spacing:.02em;color:#cfe6e9;text-decoration:underline;text-underline-offset:5px;text-decoration-color:rgba(159,208,214,.45)}
+  .hero-cta .btn-ghost:hover{background:none;color:#fff;text-decoration-color:#fff}
   .hero-meta{position:static}
   .hero-meta .wrap{padding-block:var(--space-6) var(--space-8);gap:var(--space-5) var(--space-6);display:grid;grid-template-columns:1fr 1fr}
   .hero-meta div{flex:none}
