@@ -101,7 +101,7 @@ p{text-wrap:pretty;max-width:64ch}
 .header:not(.scrolled) .menu-btn{color:#fff}
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
 .brand{display:flex;align-items:center;gap:var(--space-3);color:var(--color-text)}
-.brand .mark{width:34px;height:34px;flex:none;background-color:currentColor;color:var(--color-text);-webkit-mask:url(/assets/brand-mark.svg?v=20260601j) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601j) center/contain no-repeat}
+.brand .mark{width:34px;height:34px;flex:none;background-color:currentColor;color:var(--color-text);-webkit-mask:url(/assets/brand-mark.svg?v=20260601k) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601k) center/contain no-repeat}
 .brand .name{font-family:var(--font-display);font-size:1.18rem;font-weight:500;letter-spacing:-.01em;line-height:1.05}
 .brand .name .llc{font-size:.74em;font-weight:500;letter-spacing:.02em;color:var(--color-text-muted)}
 .brand .name .descriptor{display:block;font-family:var(--font-body);font-size:.6rem;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--color-text-faint);margin-top:3px;padding-top:3px;border-top:1px solid var(--color-divider)}
@@ -166,7 +166,7 @@ p{text-wrap:pretty;max-width:64ch}
 .sea-line:nth-child(3){animation-duration:38s;opacity:.3}
 .sea-line:nth-child(4){animation-duration:44s;opacity:.22}
 @keyframes seaDrift{from{transform:translateX(0)}to{transform:translateX(-400px)}}
-.hero-compass{position:absolute;top:50%;right:-120px;width:560px;height:560px;transform:translateY(-50%);background:currentColor;color:#ffffff;opacity:.05;-webkit-mask:url(/assets/brand-mark.svg?v=20260601j) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601j) center/contain no-repeat;animation:compassSpin 140s linear infinite}
+.hero-compass{position:absolute;top:50%;right:-120px;width:560px;height:560px;transform:translateY(-50%);background:currentColor;color:#ffffff;opacity:.05;-webkit-mask:url(/assets/brand-mark.svg?v=20260601k) center/contain no-repeat;mask:url(/assets/brand-mark.svg?v=20260601k) center/contain no-repeat;animation:compassSpin 140s linear infinite}
 @keyframes compassSpin{from{transform:translateY(-50%) rotate(0)}to{transform:translateY(-50%) rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.sea-line,.hero-compass{animation:none}}
 /* --- nav clock --- */
@@ -376,4 +376,33 @@ p{text-wrap:pretty;max-width:64ch}
 @media (max-width:640px) and (prefers-reduced-motion:reduce){.hero-compass{animation:none}}
 @media (min-width:901px) and (max-width:1100px){
   .project.third{grid-column:span 6}
+}
+
+/* ============ Advisor content bands (added) ============ */
+/* dark eyebrow variant for navy/teal backgrounds */
+.eyebrow.on-dark{color:#9fd0d6}
+.eyebrow.on-dark::before{background:#9fd0d6}
+
+/* The Problem band */
+.problemband{background:var(--navy);color:#fff;padding-block:var(--space-16)}
+.problemband .problem-lead{font-family:var(--font-display);font-weight:400;font-size:clamp(1.5rem,3vw,2.4rem);line-height:1.28;max-width:60ch;margin-top:var(--space-5);color:#fff}
+.problemband .problem-lead em{font-style:italic;color:#cfe6e9}
+.problemband .problem-sub{color:rgba(255,255,255,.74);margin-top:var(--space-6);max-width:62ch;font-size:var(--text-lg)}
+
+/* How it fits band */
+.fitband .fit-panel{background:var(--navy);color:#fff;border-radius:var(--radius-lg,18px);padding:clamp(var(--space-8),5vw,var(--space-14))}
+.fitband .fit-panel h2{color:#fff;font-size:clamp(1.8rem,3.4vw,2.6rem);max-width:24ch;margin-top:var(--space-4)}
+.fitband .fit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-8);margin-top:var(--space-10)}
+.fitband .fit-grid h3{color:#cfe6e9;font-size:var(--text-xl);margin-bottom:var(--space-3)}
+.fitband .fit-grid p{color:rgba(255,255,255,.74);font-size:var(--text-base)}
+
+/* Risk-free pilot band */
+.pilotband .pilot-panel{background:linear-gradient(135deg,var(--color-accent),#2c5a62);color:#fff;border-radius:var(--radius-lg,18px);padding:clamp(var(--space-10),6vw,var(--space-16)) var(--space-8);text-align:center}
+.pilotband .pilot-panel h2{color:#fff;font-size:clamp(1.7rem,3.4vw,2.6rem);max-width:24ch;margin:var(--space-3) auto var(--space-5)}
+.pilotband .pilot-panel p{color:rgba(255,255,255,.88);max-width:52ch;margin:0 auto var(--space-7);font-size:var(--text-lg)}
+.pilotband .pilot-cta{background:#fff;color:var(--color-accent-hover);border:none}
+.pilotband .pilot-cta:hover{background:#eef6f7}
+
+@media (max-width:760px){
+  .fitband .fit-grid{grid-template-columns:1fr;gap:var(--space-7)}
 }
