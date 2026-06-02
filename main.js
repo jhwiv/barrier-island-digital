@@ -155,7 +155,7 @@ const CONTENT_FALLBACK = {
     'The compass in our mark is a promise: we help people find their way.',
     'Every commit deploys to the edge — this site included.',
   ],
-  nowBuilding: 'Trip Optimizer',
+  nowBuilding: 'a client’s next companion app',
   spotlight: [
     { title: 'Maritimes Grand Loop', fact: 'A 12-day loop through Newfoundland & Nova Scotia — ferries, fishing villages, and iceberg alley off the northern coast.', url: 'https://maritimesgrandloop.com' },
     { title: 'Zürich Weekend', fact: 'Three days from Copenhagen to Zürich — lake, old town, and the alps, with logistics tuned to the minute.', url: 'https://zurich-weekend.com' },
