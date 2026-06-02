@@ -1,0 +1,11 @@
+# Cloudflare Pages headers — force HTML to always revalidate so deploys show instantly.
+# Versioned assets (styles.css?v=, main.js?v=) get a fresh URL on every change, so they may cache.
+
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
