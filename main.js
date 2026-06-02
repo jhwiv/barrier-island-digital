@@ -9,10 +9,25 @@
   t && t.addEventListener('click', () => { d = d === 'dark' ? 'light' : 'dark'; apply(); });
 })();
 
-// ===== Sticky header shadow =====
+// ===== Sticky header: transparent over hero, cream once hero leaves view =====
 const header = document.getElementById('header');
-const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 12);
-onScroll(); addEventListener('scroll', onScroll, { passive: true });
+const hero = document.querySelector('.hero');
+const headerH = () => header.offsetHeight || 72;
+if (hero && 'IntersectionObserver' in window) {
+  // Header turns cream only once the hero has scrolled up past the header band.
+  const heroObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => header.classList.toggle('scrolled', !e.isIntersecting));
+    },
+    { rootMargin: `-${headerH()}px 0px 0px 0px`, threshold: 0 }
+  );
+  heroObserver.observe(hero);
+} else {
+  // Fallback: use a generous threshold (a full header height) to avoid mobile-inertia flicker.
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > headerH());
+  onScroll();
+  addEventListener('scroll', onScroll, { passive: true });
+}
 
 // ===== Mobile menu =====
 const mb = document.getElementById('menuBtn'), mm = document.getElementById('mobileMenu');
