@@ -121,15 +121,29 @@ document.querySelectorAll('[data-card]').forEach(card => {
     };
     return m[code] || ['🌐', 'Conditions'];
   }
-  let data = [];
-  Promise.all(cities.map(c =>
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit`)
+  // Graceful fallback shown if data is slow, blocked, or unavailable — so a visitor never sees bare loading text.
+  const FALLBACK = '<span class="wx"><span class="wx-ico">🧭</span><span class="wx-city">Across our destinations</span><span class="wx-cond">Zürich · Santa Fe · the Maritimes · the Gulf coast</span></span>';
+  let settled = false;
+  function showFallback() { if (!settled) { settled = true; rotator.innerHTML = FALLBACK; } }
+  // Per-request timeout so a hung connection never strands the widget on "Checking the skies…".
+  function fetchCity(c) {
+    const ctrl = ('AbortController' in window) ? new AbortController() : null;
+    const t = setTimeout(() => ctrl && ctrl.abort(), 6000);
+    return fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit`, ctrl ? { signal: ctrl.signal } : undefined)
       .then(r => r.ok ? r.json() : null)
       .then(j => j && j.current ? { name: c.name, temp: Math.round(j.current.temperature_2m), code: j.current.weather_code } : null)
       .catch(() => null)
-  )).then(results => {
+      .finally(() => clearTimeout(t));
+  }
+  // Overall safety net: if nothing has rendered within 7s, show the fallback regardless.
+  const safety = setTimeout(showFallback, 7000);
+  let data = [];
+  Promise.all(cities.map(fetchCity)).then(results => {
+    clearTimeout(safety);
     data = results.filter(Boolean);
-    if (!data.length) { rotator.innerHTML = '<span class="wx skeleton">Weather unavailable</span>'; return; }
+    if (settled) return;
+    if (!data.length) { showFallback(); return; }
+    settled = true;
     let i = 0;
     function render() {
       const d = data[i % data.length];
@@ -155,7 +169,6 @@ const CONTENT_FALLBACK = {
     'The compass in our mark is a promise: we help people find their way.',
     'Every commit deploys to the edge — this site included.',
   ],
-  nowBuilding: 'a client’s next companion app',
   spotlight: [
     { title: 'Maritimes Grand Loop', fact: 'A 12-day loop through Newfoundland & Nova Scotia — ferries, fishing villages, and iceberg alley off the northern coast.', url: 'https://maritimesgrandloop.com' },
     { title: 'Zürich Weekend', fact: 'Three days from Copenhagen to Zürich — lake, old town, and the alps, with logistics tuned to the minute.', url: 'https://zurich-weekend.com' },
@@ -165,13 +178,7 @@ const CONTENT_FALLBACK = {
 
 function initContent(c) {
   initFieldNote(Array.isArray(c.fieldNotes) && c.fieldNotes.length ? c.fieldNotes : CONTENT_FALLBACK.fieldNotes);
-  initNowBuilding(c.nowBuilding || CONTENT_FALLBACK.nowBuilding);
   initSpotlight(Array.isArray(c.spotlight) && c.spotlight.length ? c.spotlight : CONTENT_FALLBACK.spotlight);
-}
-
-function initNowBuilding(label) {
-  const el = document.getElementById('nowBuilding');
-  if (el) el.textContent = 'Currently building: ' + label;
 }
 
 function initFieldNote(notes) {
@@ -251,4 +258,35 @@ fetch('content.json', { cache: 'no-cache' })
   }
   tick();
   setInterval(tick, 30000);
+})();
+
+/* --- contact intake form: composes a prefilled email (static-site friendly) --- */
+(function () {
+  var form = document.getElementById('contactForm');
+  if (!form) return;
+  var note = document.getElementById('cfNote');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var dest = (document.getElementById('cfDestination').value || '').trim();
+    var date = (document.getElementById('cfDate').value || '').trim();
+    var advisor = (document.getElementById('cfAdvisor').value || '').trim();
+    var missing = [];
+    if (!dest) missing.push('destination');
+    if (!date) missing.push('travel date');
+    if (!advisor) missing.push('your name');
+    if (missing.length && note) {
+      note.innerHTML = 'Please add your ' + missing.join(', ') + ' so we can tailor the demo. Prefer to write directly? <a href="mailto:info@barrierislanddigital.com">info@barrierislanddigital.com</a>';
+      return;
+    }
+    var subject = 'New client companion — ' + dest;
+    var body =
+      'Trip destination: ' + dest + '\n' +
+      'Travel date: ' + date + '\n' +
+      'Advisor name: ' + advisor + '\n\n' +
+      'A little about the trip:\n';
+    var href = 'mailto:info@barrierislanddigital.com?subject=' +
+      encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    window.location.href = href;
+    if (note) note.innerHTML = 'Opening your email now… If nothing happens, write us at <a href="mailto:info@barrierislanddigital.com">info@barrierislanddigital.com</a>';
+  });
 })();

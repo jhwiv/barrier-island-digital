@@ -21,7 +21,7 @@
 <link rel="manifest" href="/site.webmanifest?v=20260601b">
 <meta name="theme-color" content="#1c2840">
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260601u">
+<link rel="stylesheet" href="styles.css?v=20260601v">
 </head>
 <body>
 
@@ -87,7 +87,7 @@
   <a href="#work" class="hero-scroll" aria-label="Scroll to work"><span class="hero-scroll-text">Scroll</span><span class="hero-scroll-line"></span></a>
   <div class="hero-meta">
     <div class="wrap">
-      <div><strong>3</strong><span>Sites live in production</span></div>
+      <div><strong>3</strong><span>Live client sites in production</span></div>
       <div><strong>Edge</strong><span>Cloudflare-deployed</span></div>
       <div><strong>PWA</strong><span>Mobile-first, offline-ready</span></div>
     </div>
@@ -116,12 +116,11 @@
     </div>
     <div class="lb-block lb-weather" id="weatherStrip" aria-live="polite">
       <span class="lb-label">In our destinations now</span>
-      <div class="weather-rotator" id="weatherRotator"><span class="wx skeleton">Loading conditions…</span></div>
+      <div class="weather-rotator" id="weatherRotator"><span class="wx skeleton">Checking the skies…</span></div>
     </div>
     <div class="lb-block lb-status">
       <span class="lb-label">From the studio</span>
       <div class="fieldnote" id="fieldNote" aria-live="polite">—</div>
-      <div class="nowline"><span class="pulse"></span><span id="nowBuilding">Currently building: a client&rsquo;s next companion app</span></div>
     </div>
   </div>
 </section>
@@ -361,10 +360,18 @@
       <span class="eyebrow" style="justify-content:center">Get in touch</span>
       <h2>Have a client trip worth remembering?</h2>
       <p>Tell us where your client is headed. We’ll show you what their companion could feel like — no commitment.</p>
-      <div class="contact-actions">
-        <a href="mailto:info@barrierislanddigital.com" class="btn btn-primary btn-lg">info@barrierislanddigital.com</a>
-        <a href="#work" class="btn btn-ghost btn-lg">Launch a demo</a>
-      </div>
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="cf-row">
+          <label class="cf-field"><span>Trip destination</span><input type="text" name="destination" id="cfDestination" placeholder="e.g. Amalfi Coast" autocomplete="off" required></label>
+          <label class="cf-field"><span>Travel date</span><input type="text" name="travelDate" id="cfDate" placeholder="e.g. September 2026" autocomplete="off" required></label>
+          <label class="cf-field"><span>Advisor name</span><input type="text" name="advisor" id="cfAdvisor" placeholder="Your name" autocomplete="name" required></label>
+        </div>
+        <div class="contact-actions">
+          <button type="submit" class="btn btn-primary btn-lg">Start the conversation</button>
+          <a href="#work" class="btn btn-ghost btn-lg">Launch a demo</a>
+        </div>
+        <p class="cf-note" id="cfNote">Opens your email with the details filled in. Prefer to write directly? <a href="mailto:info@barrierislanddigital.com">info@barrierislanddigital.com</a></p>
+      </form>
     </div>
   </div>
 </section>
@@ -386,11 +393,11 @@
     <div class="footer-legal">
       <span>© <span id="year"></span> Barrier Island Digital, LLC. All rights reserved.</span>
       <span>Seaside Park, New Jersey · barrierislanddigital.com</span>
-      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-02T20:48:00Z"></span></span>
+      <span class="deploy-stamp">Last deployed <span id="lastDeployed" data-build="2026-06-03T01:30:00Z"></span></span>
     </div>
   </div>
 </footer>
 
-<script src="main.js?v=20260601u"></script>
+<script src="main.js?v=20260601v"></script>
 </body>
 </html>
