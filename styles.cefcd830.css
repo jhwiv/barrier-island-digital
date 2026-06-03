@@ -368,9 +368,6 @@ p{text-wrap:pretty;max-width:64ch}
   .hero-tags{margin-top:var(--space-5);gap:.45rem}
   .hero-tag{font-size:.6rem;padding:.32rem .65rem}
   .hero-scroll{display:none}
-  /* company name flush-left at the page edge (compass shows as the hero watermark, so the inline mark is redundant on mobile) */
-  .header .brand .mark{display:none}
-  .header .brand{gap:0}
 }
 @media (max-width:900px){
   .nav-links,.nav-right .btn,.nav-clock{display:none}
