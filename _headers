@@ -1,5 +1,6 @@
-# Cloudflare Pages headers — force HTML to always revalidate so deploys show instantly.
-# Versioned assets (styles.css?v=, main.js?v=) get a fresh URL on every change, so they may cache.
+# Cloudflare Pages headers — guarantee deploys show instantly, no hard-refresh needed.
+# HTML is never cached. CSS/JS/JSON must revalidate every request (ETag makes this cheap:
+# unchanged files return 304 Not Modified, changed files return fresh bytes immediately).
 
 /
   Cache-Control: no-cache, no-store, must-revalidate
@@ -9,3 +10,20 @@
 
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
+
+/styles.css
+  Cache-Control: no-cache, must-revalidate
+
+/main.js
+  Cache-Control: no-cache, must-revalidate
+
+/content.json
+  Cache-Control: no-cache, must-revalidate
+
+/site.webmanifest
+  Cache-Control: no-cache, must-revalidate
+
+# Static media (images, fonts, the compass mark) can cache for a day — they rarely change
+# and are not the source of "I don't see the update" problems.
+/assets/*
+  Cache-Control: public, max-age=86400, must-revalidate
