@@ -1,4 +1,4 @@
-<svg viewBox="0 0 130 140" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Barrier Island Digital compass mark">
+<svg viewBox="-8 0 146 140" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Barrier Island Digital compass mark">
   <!-- Outer compass ring -->
   <circle cx="65" cy="58" r="42" fill="none" stroke="currentColor" stroke-width="5"/>
   <!-- Cardinal ticks -->
@@ -31,6 +31,13 @@
   <!-- center hub -->
   <circle cx="65" cy="58" r="6.5" fill="none" stroke="currentColor" stroke-width="4"/>
   <circle cx="65" cy="58" r="2.6" fill="currentColor"/>
+  <!-- Cardinal labels -->
+  <g fill="currentColor" font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="middle">
+    <text x="65" y="11" font-size="12">N</text>
+    <text x="65" y="114" font-size="12">S</text>
+    <text x="118" y="62.5" font-size="12">E</text>
+    <text x="12" y="62.5" font-size="12">W</text>
+  </g>
   <!-- Waves -->
   <g stroke="currentColor" fill="none" stroke-width="4.2" stroke-linecap="round">
     <path d="M22 108 C35 99, 47 117, 60 108 S86 99, 99 108 S121 116, 128 108" opacity="0.92"/>
