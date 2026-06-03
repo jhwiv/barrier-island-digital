@@ -1,28 +1,27 @@
-# Cloudflare Pages headers — guarantee deploys show instantly, no hard-refresh needed.
-# HTML is never cached. CSS/JS/JSON must revalidate every request (ETag makes this cheap:
-# unchanged files return 304 Not Modified, changed files return fresh bytes immediately).
-# NOTE: glob patterns are used because exact root-file paths (e.g. /styles.css) can fail to
-# match in Cloudflare Pages _headers; globs match reliably.
+# Cloudflare cache strategy — deploys appear instantly, no hard-refresh ever needed.
+#
+# WHY: Cloudflare caches .css/.js by file EXTENSION with a 4-hour minimum that a _headers
+# no-cache rule cannot lower. The robust, industry-standard fix is CONTENT-HASHED FILENAMES
+# (styles.<hash>.css, main.<hash>.js): any change produces a brand-new filename, so the old
+# cached copy is irrelevant and the new file — never seen before — is fetched immediately.
+# The HTML (never cached) always points at the current hashed filenames.
 
+# HTML: never cache — always fetch fresh so it points at the latest hashed assets.
+/
+  Cache-Control: no-cache, no-store, must-revalidate
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
 
-/
-  Cache-Control: no-cache, no-store, must-revalidate
-
-/*.css
-  Cache-Control: no-cache, must-revalidate
-
-/*.js
-  Cache-Control: no-cache, must-revalidate
-
+# JSON content: revalidate every request (also fetched with cache:'no-cache' in JS).
 /*.json
   Cache-Control: no-cache, must-revalidate
 
-/*.webmanifest
-  Cache-Control: no-cache, must-revalidate
+# Hashed CSS/JS: safe to cache forever — the filename changes whenever the content does.
+/styles.*.css
+  Cache-Control: public, max-age=31536000, immutable
+/main.*.js
+  Cache-Control: public, max-age=31536000, immutable
 
-# Static media (images, fonts, the compass mark) can cache for a day — they rarely change
-# and are not the source of "I don't see the update" problems.
+# Static media: cache for a day.
 /assets/*
   Cache-Control: public, max-age=86400, must-revalidate
