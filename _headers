@@ -1,26 +1,25 @@
 # Cloudflare Pages headers — guarantee deploys show instantly, no hard-refresh needed.
 # HTML is never cached. CSS/JS/JSON must revalidate every request (ETag makes this cheap:
 # unchanged files return 304 Not Modified, changed files return fresh bytes immediately).
-
-/
-  Cache-Control: no-cache, no-store, must-revalidate
-
-/index.html
-  Cache-Control: no-cache, no-store, must-revalidate
+# NOTE: glob patterns are used because exact root-file paths (e.g. /styles.css) can fail to
+# match in Cloudflare Pages _headers; globs match reliably.
 
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
 
-/styles.css
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/*.css
   Cache-Control: no-cache, must-revalidate
 
-/main.js
+/*.js
   Cache-Control: no-cache, must-revalidate
 
-/content.json
+/*.json
   Cache-Control: no-cache, must-revalidate
 
-/site.webmanifest
+/*.webmanifest
   Cache-Control: no-cache, must-revalidate
 
 # Static media (images, fonts, the compass mark) can cache for a day — they rarely change
