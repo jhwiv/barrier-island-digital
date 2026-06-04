@@ -366,13 +366,15 @@ p{text-wrap:pretty;max-width:64ch}
   /* secondary action reads as a lighter text link, not a second heavy button */
   .hero-cta .btn-ghost{padding:.78rem 1.6rem;min-width:min(15rem,80%);justify-content:center;border:1px solid rgba(240,230,207,.45);background:transparent;color:var(--color-cream);font-size:var(--text-sm);letter-spacing:.02em;text-decoration:none;border-radius:var(--radius-full)}
   .hero-cta .btn-ghost:hover{background:rgba(240,230,207,.08);border-color:var(--color-cream);color:#fff}
-  .hero-meta{position:static;background:linear-gradient(180deg,transparent 0%,rgba(12,18,32,.6) 30%,rgba(12,18,32,.92) 100%);margin-top:var(--space-12);padding-top:var(--space-10)}
-  .hero-meta .wrap{margin-top:0;padding-block:var(--space-2) var(--space-10);gap:var(--space-4);display:flex;flex-direction:column;align-items:flex-start;border-top:none}
+  /* Proof bar: close the dead zone, big gold number, inline secondary stats */
+  .hero-meta{position:static;background:linear-gradient(180deg,transparent 0%,rgba(12,18,32,.6) 30%,rgba(12,18,32,.92) 100%);margin-top:var(--space-10);padding-top:var(--space-8)}
+  .hero-meta .wrap{margin-top:0;padding-block:var(--space-3) var(--space-10);gap:var(--space-3);display:flex;flex-direction:column;align-items:flex-start;border-top:none}
   .hero-meta div{flex:none;width:100%}
-  .hero-meta strong{font-size:1.45rem;display:inline-block;margin-right:.7rem;vertical-align:baseline;font-weight:600;letter-spacing:-.01em}
-  .hero-meta .hero-meta-num{color:var(--color-gold);font-size:1.9rem;font-weight:700}
-  .hero-meta span{display:inline-block;margin-top:0;vertical-align:baseline;color:rgba(255,255,255,.78)}
-  .hero-meta .hero-meta-headline span{color:#fff;font-weight:500}
+  .hero-meta .hero-meta-headline{display:flex;align-items:baseline;gap:.7rem;width:100%}
+  .hero-meta .hero-meta-num{color:var(--color-gold);font-size:2.4rem;font-weight:700;letter-spacing:-.02em;line-height:1;display:inline-block;margin-right:0}
+  .hero-meta strong{font-size:1.05rem;display:inline-block;margin-right:.6rem;vertical-align:baseline;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--color-cream)}
+  .hero-meta span{display:inline-block;margin-top:0;vertical-align:baseline;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+  .hero-meta .hero-meta-headline span{color:#fff;font-weight:500;font-size:.78rem;letter-spacing:.12em;opacity:.95}
   .hero-tags{margin-top:var(--space-5);gap:.45rem}
   .hero-tag{font-size:.6rem;padding:.32rem .65rem}
   .hero-scroll{display:none}
