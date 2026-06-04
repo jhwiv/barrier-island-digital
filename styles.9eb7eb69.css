@@ -353,7 +353,11 @@ p{text-wrap:pretty;max-width:64ch}
   /* let the island photo read more on small screens */
   .hero-bg::after{background:linear-gradient(180deg,rgba(12,18,32,.34) 0%,rgba(12,18,32,.5) 50%,rgba(12,18,32,.74) 100%)}
   .hero{min-height:auto;flex-direction:column;align-items:stretch;padding-top:0}
+  /* Comfortable luxury breathing room + iPhone safe-area awareness */
+  .wrap{padding-left:calc(1.5rem + env(safe-area-inset-left,0px));padding-right:calc(1.5rem + env(safe-area-inset-right,0px))}
   .hero-inner{padding-block:var(--space-20) var(--space-8)}
+  /* Headline in cream — echoes the trip apps */
+  .hero-wordmark{color:var(--color-cream)}
   .hero .eyebrow{font-size:.66rem;letter-spacing:.16em;margin-top:var(--space-6)}
   .hero h1{font-size:clamp(2rem,8.5vw,2.6rem);line-height:1.08;margin-top:var(--space-4)}
   .hero-wordmark{font-size:clamp(2.8rem,13vw,4rem);line-height:.98;margin-top:var(--space-4)}
