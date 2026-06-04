@@ -352,19 +352,20 @@ p{text-wrap:pretty;max-width:64ch}
   .hero h1{font-size:clamp(2rem,8.5vw,2.6rem);line-height:1.08;margin-top:var(--space-4)}
   .hero-wordmark{font-size:clamp(2.8rem,13vw,4rem);line-height:.98;margin-top:var(--space-4)}
   .hero-tagline{font-size:var(--text-base);margin-top:var(--space-4)}
-  .hero-sub{font-size:var(--text-sm);margin-top:var(--space-3);color:rgba(255,255,255,.72)}
+  /* On mobile the tagline carries the full message; hide the secondary paragraph to declutter the hero */
+  .hero-sub{display:none}
   /* tighter rhythm: pull the primary action up close to the pills, content-sized buttons, clear hierarchy */
-  .hero-cta{flex-direction:column;align-items:flex-start;margin-top:var(--space-6);gap:var(--space-3)}
+  .hero-cta{flex-direction:column;align-items:flex-start;margin-top:var(--space-6);gap:var(--space-5)}
   .hero-cta .btn{align-self:flex-start;justify-content:center;padding:.78rem 1.6rem;width:auto}
   .hero-cta .btn-primary{min-width:min(15rem,80%)}
   /* secondary action reads as a lighter text link, not a second heavy button */
   .hero-cta .btn-ghost{padding-inline:0;border:none;background:none;font-size:var(--text-sm);letter-spacing:.02em;color:#cfe6e9;text-decoration:underline;text-underline-offset:5px;text-decoration-color:rgba(159,208,214,.45)}
   .hero-cta .btn-ghost:hover{background:none;color:#fff;text-decoration-color:#fff}
   .hero-meta{position:static}
-  .hero-meta .wrap{margin-top:var(--space-32);padding-block:var(--space-8) var(--space-10);gap:var(--space-5) var(--space-6);display:grid;grid-template-columns:1fr 1fr}
-  .hero-meta div{flex:none}
-  .hero-meta div:last-child{grid-column:1 / -1}
-  .hero-meta strong{font-size:1.3rem}
+  .hero-meta .wrap{margin-top:var(--space-16);padding-block:var(--space-6) var(--space-10);gap:var(--space-4);display:flex;flex-direction:column;align-items:flex-start}
+  .hero-meta div{flex:none;width:100%}
+  .hero-meta strong{font-size:1.25rem;display:inline-block;margin-right:.6rem;vertical-align:baseline}
+  .hero-meta span{display:inline-block;margin-top:0;vertical-align:baseline}
   .hero-tags{margin-top:var(--space-5);gap:.45rem}
   .hero-tag{font-size:.6rem;padding:.32rem .65rem}
   .hero-scroll{display:none}
