@@ -25,8 +25,13 @@
     },
     {
       "title": "Naples & Fort Myers",
-      "fact": "A Gulf-coast Florida companion — RSW, Punta Gorda, and Lakewood Ranch with dining, beaches, and golf communities mapped out.",
+      "fact": "A quick Gulf-coast weekend doubling as a house-hunting trip — showings, neighborhoods, dining, and beach time in a tight two-day plan.",
       "url": "https://jhwiv.github.io/naples-itinerary/"
+    },
+    {
+      "title": "Budapest & Vienna",
+      "fact": "A long weekend for college kids studying abroad — two capitals by train, ruin bars, coffeehouses, baths, and a Prosecco cruise on the Danube.",
+      "url": "/budvienna/"
     }
   ]
 }
