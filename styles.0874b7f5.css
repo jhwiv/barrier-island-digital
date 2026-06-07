@@ -89,6 +89,8 @@ p{text-wrap:pretty;max-width:64ch}
 .section-head{max-width:720px;margin-bottom:clamp(var(--space-10),5vw,var(--space-16))}
 .section-head h2{font-size:var(--text-2xl);margin-top:var(--space-4)}
 .section-head p{margin-top:var(--space-5);color:var(--color-text-muted);font-size:var(--text-lg)}
+.section-head .section-head-philosophy{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:clamp(1.25rem,2vw,1.6rem);line-height:1.32;color:var(--color-accent);max-width:56ch;margin-top:var(--space-6);padding-left:var(--space-5);border-left:2px solid var(--color-accent);opacity:.92}
+.service-coda{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:1.0625rem;line-height:1.4;color:var(--color-accent);margin-top:var(--space-3);opacity:.95}
 
 /* ============ Header ============ */
 /* Header: solid navy bar, pinned at top, opaque so content scrolls underneath and out of sight. Color never changes on scroll. */
