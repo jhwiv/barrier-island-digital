@@ -224,7 +224,6 @@ p{text-wrap:pretty;max-width:64ch}
 .project[data-launch-demo]{cursor:pointer}
 .project[data-launch-demo]:focus-visible{outline:2px solid var(--color-accent);outline-offset:3px}
 .project:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--color-accent)}
-/* Launch affordance on the image — always visible on touch, intensifies on hover */
 .project[data-launch-demo] .project-visual::before{content:"Tap to launch →";position:absolute;left:var(--space-4);bottom:var(--space-4);z-index:2;font-size:var(--text-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(12,18,32,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.4rem .75rem;border-radius:var(--radius-full);border:1px solid rgba(255,255,255,.18);opacity:.92;transition:opacity var(--transition),transform var(--transition),background var(--transition)}
 .project[data-launch-demo]:hover .project-visual::before{opacity:1;background:var(--color-accent);transform:translateX(2px)}
 @media (hover:hover){.project[data-launch-demo] .project-visual::before{opacity:0;transform:translateY(4px)}.project[data-launch-demo]:hover .project-visual::before,.project[data-launch-demo]:focus-visible .project-visual::before{opacity:1;transform:translateY(0)}}
@@ -364,18 +363,18 @@ p{text-wrap:pretty;max-width:64ch}
   /* Comfortable luxury breathing room + iPhone safe-area awareness */
   .wrap{padding-left:calc(1.5rem + env(safe-area-inset-left,0px));padding-right:calc(1.5rem + env(safe-area-inset-right,0px))}
   .hero-inner{padding-block:var(--space-20) var(--space-8)}
-  /* Headline in cream — echoes the trip apps */
   .hero h1.hero-wordmark{color:var(--color-cream)}
   .hero .eyebrow{font-size:.66rem;letter-spacing:.16em;margin-top:var(--space-6)}
   .hero h1{font-size:clamp(2rem,8.5vw,2.6rem);line-height:1.08;margin-top:var(--space-4)}
   .hero-wordmark{font-size:clamp(2.8rem,13vw,4rem);line-height:.98;margin-top:var(--space-4)}
   .hero-tagline{font-size:var(--text-base);margin-top:var(--space-4)}
+  /* On mobile the tagline carries the full message; hide the secondary paragraph to declutter the hero */
   .hero-sub{display:none}
   /* tighter rhythm: pull the primary action up close to the pills, content-sized buttons, clear hierarchy */
   .hero-cta{flex-direction:column;align-items:flex-start;margin-top:var(--space-6);gap:var(--space-5)}
   .hero-cta .btn{align-self:flex-start;justify-content:center;padding:.78rem 1.6rem;width:auto}
   .hero-cta .btn-primary{min-width:min(15rem,80%)}
-  /* secondary action reads as a lighter text link, not a second heavy button */
+  /* secondary action: clean outline button at same width as primary — paired hierarchy */
   .hero-cta .btn-ghost{padding:.78rem 1.6rem;min-width:min(15rem,80%);justify-content:center;border:1px solid rgba(240,230,207,.45);background:transparent;color:var(--color-cream);font-size:var(--text-sm);letter-spacing:.02em;text-decoration:none;border-radius:var(--radius-full)}
   .hero-cta .btn-ghost:hover{background:rgba(240,230,207,.08);border-color:var(--color-cream);color:#fff}
   /* Proof bar: close the dead zone, big gold number, inline secondary stats */
