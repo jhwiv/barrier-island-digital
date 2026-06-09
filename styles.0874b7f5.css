@@ -453,3 +453,7 @@ p{text-wrap:pretty;max-width:64ch}
   .fitband .fit-grid h3{margin-bottom:var(--space-4)}
   .fitband .fit-grid p{line-height:1.65}
 }
+
+/* Tighten "What your client experiences" bridge section (~50% less padding, snug card gap) */
+#services{padding-block:clamp(var(--space-10),4.5vw,var(--space-16))}
+#services .section-head{margin-bottom:clamp(var(--space-6),2vw,var(--space-8))}
