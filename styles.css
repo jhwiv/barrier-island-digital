@@ -453,6 +453,19 @@ p{text-wrap:pretty;max-width:64ch}
   .fitband .fit-grid p{line-height:1.65}
 }
 
-/* Tighten "What your client experiences" bridge section (~50% less padding, snug card gap) */
-#services{padding-block:clamp(var(--space-10),4.5vw,var(--space-16))}
-#services .section-head{margin-bottom:clamp(var(--space-6),2vw,var(--space-8))}
+/* ====== Client-experience bridge ======
+   Inline rail above the feature cards. Reads as scaffolding, not a destination:
+   tiny eyebrow + a single line where the headline and supporting clause share a
+   sentence, separated from the cards by a hairline divider. Total height on
+   mobile ~120px (vs ~320px for a full section head). */
+#services{padding-block:clamp(var(--space-8),3.5vw,var(--space-12))}
+#services .bridge{display:flex;flex-direction:column;gap:var(--space-2);padding-block:var(--space-2) var(--space-5);margin-bottom:var(--space-5);border-bottom:1px solid rgba(159,208,214,.18)}
+#services .bridge-eyebrow{font-family:var(--font-display);font-size:var(--text-xs);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent);font-weight:600;line-height:1.2}
+#services .bridge-eyebrow::before{content:"—— ";letter-spacing:0}
+#services .bridge-line{margin:0;font-size:var(--text-base);line-height:1.5;color:var(--color-text-muted);max-width:62ch}
+#services .bridge-line strong{font-family:var(--font-display);font-weight:500;font-style:normal;color:var(--color-text);font-size:clamp(1.15rem,1.8vw,1.35rem);letter-spacing:-.005em;margin-right:.45em;display:inline}
+@media (min-width:760px){
+  #services .bridge{flex-direction:row;align-items:baseline;gap:var(--space-6);padding-block:var(--space-3) var(--space-6);margin-bottom:var(--space-6)}
+  #services .bridge-eyebrow{flex:0 0 auto;padding-top:.15em}
+  #services .bridge-line{flex:1 1 auto}
+}
