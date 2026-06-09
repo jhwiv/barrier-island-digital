@@ -22,6 +22,37 @@
 <meta name="theme-color" content="#1c2840">
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.9b8cd657.css">
+
+<!-- ============ Auto-update: open tabs refresh themselves after a deploy ============
+     Fetches /version.json on load, on tab focus, and every 60s while visible.
+     If the SHA changed since this page was loaded, reload once. No hard-refresh ever needed.
+     Silent fail-safe: never reloads more than once every 10s; never reloads in dev/preview hosts. -->
+<script>
+(function(){
+  if (location.hostname === 'localhost' || location.hostname.endsWith('.pages.dev')) return;
+  var bootSha = null, lastReload = 0;
+  function check(){
+    fetch('/version.json', {cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(v){
+        if (!v || !v.sha) return;
+        if (bootSha === null) { bootSha = v.sha; return; }
+        if (v.sha !== bootSha && (Date.now() - lastReload) > 10000) {
+          lastReload = Date.now();
+          location.reload();
+        }
+      })
+      .catch(function(){});
+  }
+  check();
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible') check();
+  });
+  setInterval(function(){
+    if (document.visibilityState === 'visible') check();
+  }, 60000);
+})();
+</script>
 </head>
 <body>
 
