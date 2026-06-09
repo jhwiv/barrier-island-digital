@@ -231,15 +231,26 @@ fetch('content.json', { cache: 'no-cache' })
   .then(c => initContent(c))
   .catch(() => initContent(CONTENT_FALLBACK));
 
-// ===== Footer: last deployed timestamp (BUILD_TIME injected at deploy) =====
+// ===== Footer: last deployed timestamp (read from /version.json, stamped on every push) =====
 (function () {
   const el = document.getElementById('lastDeployed');
   if (!el) return;
-  const raw = el.getAttribute('data-build');
-  if (!raw || raw.indexOf('BUILD') === 0) { el.parentElement && el.parentElement.remove(); return; }
-  const d = new Date(raw);
-  if (isNaN(d)) { el.parentElement && el.parentElement.remove(); return; }
-  el.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  function paint(raw) {
+    const d = raw ? new Date(raw) : null;
+    if (!d || isNaN(d)) {
+      // Fallback to the hardcoded data-build so the footer never goes blank.
+      const fb = el.getAttribute('data-build');
+      const dfb = fb ? new Date(fb) : null;
+      if (!dfb || isNaN(dfb)) { el.parentElement && el.parentElement.remove(); return; }
+      el.textContent = dfb.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      return;
+    }
+    el.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+  fetch('/version.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(v => paint(v && v.builtAt))
+    .catch(() => paint(null));
 })();
 
 
@@ -288,5 +299,29 @@ fetch('content.json', { cache: 'no-cache' })
       encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     window.location.href = href;
     if (note) note.innerHTML = 'Opening your email now… If nothing happens, write us at <a href="mailto:info@barrierislanddigital.com">info@barrierislanddigital.com</a>';
+  });
+})();
+
+// ===== Demo cards: click/keyboard opens the demo in a new tab (no embed modal). =====
+(function () {
+  function launch(url) {
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-launch-demo]');
+    if (!t) return;
+    // Allow native handling for real <a> elements with their own target=_blank — and for modifier clicks.
+    if (t.tagName === 'A') return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    e.preventDefault();
+    launch(t.getAttribute('data-launch-demo'));
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var t = document.activeElement;
+    if (!t || !t.matches || !t.matches('[data-launch-demo][role="button"]')) return;
+    e.preventDefault();
+    launch(t.getAttribute('data-launch-demo'));
   });
 })();
