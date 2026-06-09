@@ -23,34 +23,35 @@
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.9b8cd657.css">
 
-<!-- ============ Auto-update: open tabs refresh themselves after a deploy ============
-     Fetches /version.json on load, on tab focus, and every 60s while visible.
-     If the SHA changed since this page was loaded, reload once. No hard-refresh ever needed.
-     Silent fail-safe: never reloads more than once every 10s; never reloads in dev/preview hosts. -->
+<!-- ============ Service worker: network-first HTML so users never see stale deploys ============
+     After first install, every future deploy is picked up automatically on the next navigation.
+     The user never has to clear their cache. (Pattern from short-aruba/sw.js, runbook Lesson 9.) -->
 <script>
 (function(){
+  if (!('serviceWorker' in navigator)) return;
+  if (!location.protocol.startsWith('http')) return;
   if (location.hostname === 'localhost' || location.hostname.endsWith('.pages.dev')) return;
-  var bootSha = null, lastReload = 0;
-  function check(){
-    fetch('/version.json', {cache:'no-store'})
-      .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(v){
-        if (!v || !v.sha) return;
-        if (bootSha === null) { bootSha = v.sha; return; }
-        if (v.sha !== bootSha && (Date.now() - lastReload) > 10000) {
-          lastReload = Date.now();
-          location.reload();
-        }
-      })
-      .catch(function(){});
-  }
-  check();
-  document.addEventListener('visibilitychange', function(){
-    if (document.visibilityState === 'visible') check();
+  window.addEventListener('load', function(){
+    // Versioned URL forces the browser to fetch a new sw.js when version bumps.
+    navigator.serviceWorker.register('/sw.js?v=20260609a').then(function(reg){
+      if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+      reg.addEventListener('updatefound', function(){
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', function(){
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            nw.postMessage('SKIP_WAITING');
+          }
+        });
+      });
+      var reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function(){
+        if (reloaded) return;
+        reloaded = true;
+        window.location.reload();
+      });
+    }).catch(function(){});
   });
-  setInterval(function(){
-    if (document.visibilityState === 'visible') check();
-  }, 60000);
 })();
 </script>
 </head>
@@ -386,7 +387,7 @@
   </div>
 </footer>
 
-<script src="main.c962426d.js"></script>
+<script src="main.dfb72b76.js"></script>
 
 
 </body>

@@ -1,4 +1,4 @@
-// ===== Theme toggle =====
+// Theme toggle, nav, scroll reveal, weather, content, footer stamp, demo launch. v=sw-install
 (function () {
   const t = document.querySelector('[data-theme-toggle]'), r = document.documentElement;
   let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';

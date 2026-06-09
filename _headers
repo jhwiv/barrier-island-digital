@@ -20,6 +20,10 @@
 /version.json
   Cache-Control: no-cache, no-store, must-revalidate
 
+# Service worker file: must never be cached so browsers detect new SW versions.
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
 # Hashed CSS/JS: safe to cache forever — the filename changes whenever the content does.
 /styles.*.css
   Cache-Control: public, max-age=31536000, immutable
