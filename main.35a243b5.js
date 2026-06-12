@@ -306,7 +306,11 @@ fetch('content.json', { cache: 'no-cache' })
 (function () {
   function launch(url) {
     if (!url) return;
-    window.open(url, '_blank', 'noopener,noreferrer');
+    // IMPORTANT: do NOT pass a windowFeatures string (3rd arg). When it's non-empty,
+    // Chrome opens a separate popup window instead of a tab. Use the empty default,
+    // then null the opener manually to retain noopener security.
+    var w = window.open(url, '_blank');
+    if (w) { try { w.opener = null; } catch (e) {} }
   }
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-launch-demo]');
