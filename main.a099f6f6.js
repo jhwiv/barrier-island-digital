@@ -302,30 +302,155 @@ fetch('content.json', { cache: 'no-cache' })
   });
 })();
 
-// ===== Demo cards: click/keyboard opens the demo in a new tab (no embed modal). =====
+// ===== Demo launching =====
+// Default: open in the SAME tab (was opening a new window/tab, which the
+// site owner decided is the wrong behavior on desktop). Modifier clicks
+// (Cmd/Ctrl/Shift, middle-button) still open in a new tab so power users
+// who want side-by-side comparisons can do that.
+//
+// Two surfaces use this:
+//   1. <a data-launch-demo> proof-tray pills: real anchors, browser handles
+//      everything natively now that target=_blank is removed. This handler
+//      no-ops for them.
+//   2. <article role="button" data-launch-demo> project cards: not anchors,
+//      so we have to drive navigation in JS. New-tab on modifier, otherwise
+//      same-tab.
 (function () {
-  function launch(url) {
+  function launchSameTab(url) {
     if (!url) return;
-    // IMPORTANT: do NOT pass a windowFeatures string (3rd arg). When it's non-empty,
-    // Chrome opens a separate popup window instead of a tab. Use the empty default,
-    // then null the opener manually to retain noopener security.
+    window.location.href = url;
+  }
+  function launchNewTab(url) {
+    if (!url) return;
+    // Empty windowFeatures keeps Chrome from popping a separate window.
     var w = window.open(url, '_blank');
     if (w) { try { w.opener = null; } catch (e) {} }
   }
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-launch-demo]');
     if (!t) return;
-    // Allow native handling for real <a> elements with their own target=_blank — and for modifier clicks.
+    // Real <a> elements: let the browser do the work. The anchor's href
+    // navigates same-tab by default now (no target=_blank); modifier
+    // clicks open new tab natively.
     if (t.tagName === 'A') return;
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+    var modifier = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1;
     e.preventDefault();
-    launch(t.getAttribute('data-launch-demo'));
+    if (modifier) launchNewTab(t.getAttribute('data-launch-demo'));
+    else launchSameTab(t.getAttribute('data-launch-demo'));
   });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Enter' && e.key !== ' ') return;
     var t = document.activeElement;
     if (!t || !t.matches || !t.matches('[data-launch-demo][role="button"]')) return;
     e.preventDefault();
-    launch(t.getAttribute('data-launch-demo'));
+    // Keyboard activation: same-tab (no modifier sensing for keyboard).
+    launchSameTab(t.getAttribute('data-launch-demo'));
   });
+})();
+
+// ===== In-site overlay for PDFs and same-origin demos =====
+// Visitors kept getting stuck on PDF/demo pages with no way back. This
+// opens trip PDFs and same-origin demo paths in a full-screen iframe
+// overlay with a prominent close button (X), Esc-to-close, and a
+// backdrop click to close. Cross-origin demos (e.g. zurich-weekend.com,
+// maritimesgrandloop.com) still open in a new tab because they refuse
+// to iframe (X-Frame-Options) and we want the BID tab to stay put.
+(function () {
+  var SAME_ORIGIN_DEMO_PATHS = ['/naples/', '/budvienna/'];
+  var overlay, frame, titleEl, openLink, closeBtn, lastFocus;
+
+  function isPdfHref(href) {
+    if (!href) return false;
+    var clean = href.split('?')[0].split('#')[0];
+    return /\.pdf$/i.test(clean);
+  }
+  function isSameOriginDemo(href) {
+    if (!href) return false;
+    // Only intercept root-relative paths we know are demos.
+    for (var i = 0; i < SAME_ORIGIN_DEMO_PATHS.length; i++) {
+      if (href === SAME_ORIGIN_DEMO_PATHS[i] || href.indexOf(SAME_ORIGIN_DEMO_PATHS[i]) === 0) return true;
+    }
+    return false;
+  }
+
+  function build() {
+    if (overlay) return;
+    overlay = document.createElement('div');
+    overlay.className = 'bid-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Preview');
+    overlay.innerHTML =
+      '<div class="bid-overlay__bar">' +
+        '<div class="bid-overlay__title"></div>' +
+        '<a class="bid-overlay__open" target="_blank" rel="noopener">Open in new tab</a>' +
+        '<button type="button" class="bid-overlay__close" aria-label="Close preview">\u00d7</button>' +
+      '</div>' +
+      '<iframe class="bid-overlay__frame" title="Preview" allow="fullscreen"></iframe>';
+    document.body.appendChild(overlay);
+    frame = overlay.querySelector('.bid-overlay__frame');
+    titleEl = overlay.querySelector('.bid-overlay__title');
+    openLink = overlay.querySelector('.bid-overlay__open');
+    closeBtn = overlay.querySelector('.bid-overlay__close');
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();
+    });
+  }
+
+  function open(href, label) {
+    build();
+    lastFocus = document.activeElement;
+    titleEl.textContent = label || 'Preview';
+    openLink.href = href;
+    frame.src = href;
+    overlay.classList.add('is-open');
+    document.body.classList.add('bid-overlay-open');
+    // Focus the close button so keyboard users can dismiss immediately.
+    setTimeout(function () { try { closeBtn.focus(); } catch (e) {} }, 50);
+  }
+  function close() {
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    document.body.classList.remove('bid-overlay-open');
+    // Clear the iframe so audio/video stops and memory is released.
+    frame.src = 'about:blank';
+    if (lastFocus && typeof lastFocus.focus === 'function') {
+      try { lastFocus.focus(); } catch (e) {}
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href) return;
+    // Modifier clicks → respect user intent (new tab).
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
+
+    // PDF links → overlay
+    if (isPdfHref(href)) {
+      e.preventDefault();
+      var label = a.closest('.project') && a.closest('.project').querySelector('h3');
+      open(href, label ? label.textContent.trim() + ' — PDF itinerary' : 'PDF itinerary');
+      return;
+    }
+    // Same-origin demo paths → overlay
+    if (isSameOriginDemo(href)) {
+      e.preventDefault();
+      var demoLabel = a.getAttribute('data-demo-name') ||
+        (a.closest('.project') && a.closest('.project').querySelector('h3') ? a.closest('.project').querySelector('h3').textContent.trim() : 'Demo');
+      open(href, demoLabel);
+      return;
+    }
+    // Cross-origin demo (data-launch-demo + http(s) href) → force new tab
+    // so the BID tab stays available.
+    if (a.hasAttribute('data-launch-demo') && /^https?:/i.test(href)) {
+      e.preventDefault();
+      var w = window.open(href, '_blank');
+      if (w) { try { w.opener = null; } catch (err) {} }
+      return;
+    }
+  }, true); // capture phase so this fires before the existing demo-launch handler
 })();
