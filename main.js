@@ -349,15 +349,23 @@ fetch('content.json', { cache: 'no-cache' })
 })();
 
 // ===== In-site overlay for PDFs and same-origin demos =====
-// Visitors kept getting stuck on PDF/demo pages with no way back. This
-// opens trip PDFs and same-origin demo paths in a full-screen iframe
-// overlay with a prominent close button (X), Esc-to-close, and a
-// backdrop click to close. Cross-origin demos (e.g. zurich-weekend.com,
-// maritimesgrandloop.com) still open in a new tab because they refuse
-// to iframe (X-Frame-Options) and we want the BID tab to stay put.
+// Visitors kept getting stuck on PDF/demo pages with no way back. Full-
+// screen overlay with prominent close button, Esc/backdrop dismissal.
+//
+// PDFs are rendered with PDF.js into a scrollable canvas stack — iframed
+// PDFs do NOT scroll on iOS Safari (only page 1 shows). PDF.js gives us
+// a uniform scrolling viewer on every device/browser.
+//
+// Cross-origin demos (zurich-weekend.com, maritimesgrandloop.com) still
+// open in a new tab because they refuse to iframe (X-Frame-Options).
 (function () {
   var SAME_ORIGIN_DEMO_PATHS = ['/naples/', '/budvienna/'];
-  var overlay, frame, titleEl, openLink, closeBtn, lastFocus;
+  var PDFJS_LIB    = '/vendor/pdfjs/pdf.min.mjs';
+  var PDFJS_WORKER = '/vendor/pdfjs/pdf.worker.min.mjs';
+
+  var overlay, frame, pdfBox, titleEl, openLink, closeBtn, lastFocus;
+  var pdfjsLib = null;
+  var renderToken = 0;
 
   function isPdfHref(href) {
     if (!href) return false;
@@ -366,7 +374,6 @@ fetch('content.json', { cache: 'no-cache' })
   }
   function isSameOriginDemo(href) {
     if (!href) return false;
-    // Only intercept root-relative paths we know are demos.
     for (var i = 0; i < SAME_ORIGIN_DEMO_PATHS.length; i++) {
       if (href === SAME_ORIGIN_DEMO_PATHS[i] || href.indexOf(SAME_ORIGIN_DEMO_PATHS[i]) === 0) return true;
     }
@@ -386,36 +393,120 @@ fetch('content.json', { cache: 'no-cache' })
         '<a class="bid-overlay__open" target="_blank" rel="noopener">Open in new tab</a>' +
         '<button type="button" class="bid-overlay__close" aria-label="Close preview">\u00d7</button>' +
       '</div>' +
-      '<iframe class="bid-overlay__frame" title="Preview" allow="fullscreen"></iframe>';
+      '<iframe class="bid-overlay__frame" title="Preview" allow="fullscreen"></iframe>' +
+      '<div class="bid-overlay__pdf" aria-label="PDF pages"></div>';
     document.body.appendChild(overlay);
-    frame = overlay.querySelector('.bid-overlay__frame');
-    titleEl = overlay.querySelector('.bid-overlay__title');
+    frame    = overlay.querySelector('.bid-overlay__frame');
+    pdfBox   = overlay.querySelector('.bid-overlay__pdf');
+    titleEl  = overlay.querySelector('.bid-overlay__title');
     openLink = overlay.querySelector('.bid-overlay__open');
     closeBtn = overlay.querySelector('.bid-overlay__close');
-    closeBtn.addEventListener('click', close);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    closeBtn.addEventListener('click', closeOverlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay(); });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
     });
   }
 
-  function open(href, label) {
+  function showFrame() {
+    pdfBox.classList.remove('is-active');
+    pdfBox.innerHTML = '';
+    frame.style.display = '';
+  }
+  function showPdf() {
+    frame.style.display = 'none';
+    frame.src = 'about:blank';
+    pdfBox.classList.add('is-active');
+    pdfBox.scrollTop = 0;
+  }
+
+  function loadPdfJs() {
+    if (pdfjsLib) return Promise.resolve(pdfjsLib);
+    // Dynamic import keeps the ~330KB lib out of the critical path;
+    // only fetched the first time a visitor opens a PDF.
+    return import(PDFJS_LIB).then(function (mod) {
+      pdfjsLib = mod;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+      return pdfjsLib;
+    });
+  }
+
+  function renderPdf(url) {
+    var myToken = ++renderToken;
+    pdfBox.innerHTML = '<div class="bid-overlay__pdf-status">Loading PDF\u2026</div>';
+    showPdf();
+
+    loadPdfJs().then(function (lib) {
+      if (myToken !== renderToken) return null;
+      return lib.getDocument({ url: url }).promise;
+    }).then(function (pdfDoc) {
+      if (!pdfDoc || myToken !== renderToken) return;
+      pdfBox.innerHTML = '';
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var renderChain = Promise.resolve();
+
+      for (var pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+        (function (n) {
+          renderChain = renderChain.then(function () {
+            if (myToken !== renderToken) return;
+            return pdfDoc.getPage(n).then(function (page) {
+              if (myToken !== renderToken) return;
+              var containerWidth = Math.max(280, pdfBox.clientWidth - 24);
+              var baseViewport = page.getViewport({ scale: 1 });
+              var scale = containerWidth / baseViewport.width;
+              var viewport = page.getViewport({ scale: scale });
+              var canvas = document.createElement('canvas');
+              var ctx = canvas.getContext('2d');
+              canvas.width  = Math.floor(viewport.width  * dpr);
+              canvas.height = Math.floor(viewport.height * dpr);
+              canvas.style.width  = Math.floor(viewport.width)  + 'px';
+              canvas.style.height = Math.floor(viewport.height) + 'px';
+              canvas.setAttribute('aria-label', 'Page ' + n + ' of ' + pdfDoc.numPages);
+              pdfBox.appendChild(canvas);
+              return page.render({
+                canvasContext: ctx,
+                viewport: viewport,
+                transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : null
+              }).promise;
+            });
+          });
+        })(pageNum);
+      }
+      return renderChain;
+    }).catch(function (err) {
+      if (myToken !== renderToken) return;
+      console.warn('PDF render failed:', err);
+      pdfBox.innerHTML = '<div class="bid-overlay__pdf-status">' +
+        'Couldn\u2019t render the PDF inline. ' +
+        '<a href="' + url + '" target="_blank" rel="noopener">Open it in a new tab</a> instead.' +
+        '</div>';
+    });
+  }
+
+  function openOverlay(href, label, isPdf) {
     build();
     lastFocus = document.activeElement;
     titleEl.textContent = label || 'Preview';
     openLink.href = href;
-    frame.src = href;
     overlay.classList.add('is-open');
     document.body.classList.add('bid-overlay-open');
-    // Focus the close button so keyboard users can dismiss immediately.
+    if (isPdf) {
+      renderPdf(href);
+    } else {
+      showFrame();
+      frame.src = href;
+    }
     setTimeout(function () { try { closeBtn.focus(); } catch (e) {} }, 50);
   }
-  function close() {
+
+  function closeOverlay() {
     if (!overlay) return;
+    renderToken++; // cancel any in-flight PDF render
     overlay.classList.remove('is-open');
     document.body.classList.remove('bid-overlay-open');
-    // Clear the iframe so audio/video stops and memory is released.
     frame.src = 'about:blank';
+    pdfBox.innerHTML = '';
+    pdfBox.classList.remove('is-active');
     if (lastFocus && typeof lastFocus.focus === 'function') {
       try { lastFocus.focus(); } catch (e) {}
     }
@@ -426,31 +517,26 @@ fetch('content.json', { cache: 'no-cache' })
     if (!a) return;
     var href = a.getAttribute('href');
     if (!href) return;
-    // Modifier clicks → respect user intent (new tab).
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
 
-    // PDF links → overlay
     if (isPdfHref(href)) {
       e.preventDefault();
       var label = a.closest('.project') && a.closest('.project').querySelector('h3');
-      open(href, label ? label.textContent.trim() + ' — PDF itinerary' : 'PDF itinerary');
+      openOverlay(href, label ? label.textContent.trim() + ' \u2014 PDF itinerary' : 'PDF itinerary', true);
       return;
     }
-    // Same-origin demo paths → overlay
     if (isSameOriginDemo(href)) {
       e.preventDefault();
       var demoLabel = a.getAttribute('data-demo-name') ||
         (a.closest('.project') && a.closest('.project').querySelector('h3') ? a.closest('.project').querySelector('h3').textContent.trim() : 'Demo');
-      open(href, demoLabel);
+      openOverlay(href, demoLabel, false);
       return;
     }
-    // Cross-origin demo (data-launch-demo + http(s) href) → force new tab
-    // so the BID tab stays available.
     if (a.hasAttribute('data-launch-demo') && /^https?:/i.test(href)) {
       e.preventDefault();
       var w = window.open(href, '_blank');
       if (w) { try { w.opener = null; } catch (err) {} }
       return;
     }
-  }, true); // capture phase so this fires before the existing demo-launch handler
+  }, true);
 })();

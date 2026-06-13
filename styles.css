@@ -472,11 +472,28 @@ p{text-wrap:pretty;max-width:64ch}
 .bid-overlay__close:hover{transform:scale(1.05)}
 .bid-overlay__close:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
 .bid-overlay__frame{flex:1;width:100%;border:0;background:#fff}
+/* PDF.js scrollable container — used instead of iframe for PDFs so iOS Safari can scroll */
+.bid-overlay__pdf{flex:1;width:100%;overflow:auto;-webkit-overflow-scrolling:touch;background:#3a3a3a;padding:var(--space-4) 0;display:none}
+.bid-overlay__pdf.is-active{display:block}
+.bid-overlay__pdf canvas{display:block;margin:0 auto var(--space-4);max-width:calc(100% - 24px);height:auto;box-shadow:0 4px 18px rgba(0,0,0,.32);background:#fff}
+.bid-overlay__pdf-status{color:#cfe6e9;text-align:center;padding:var(--space-8) var(--space-4);font-size:var(--text-sm)}
+.bid-overlay__pdf-status a{color:#fff;text-decoration:underline}
 body.bid-overlay-open{overflow:hidden}
 @media (max-width:560px){
   .bid-overlay__bar{padding-inline:var(--space-3);min-height:52px}
   .bid-overlay__title{font-size:var(--text-sm)}
   .bid-overlay__open{font-size:10px;padding:.5rem .65rem}
+  .bid-overlay__pdf{padding:var(--space-3) 0}
+  .bid-overlay__pdf canvas{margin-bottom:var(--space-3);max-width:calc(100% - 16px)}
+}
+
+/* Workflow section: when anchor-jumped to via #workflow, the panel was
+   landing flush against the sticky header on mobile, looking crowded.
+   Give it real breathing room on every viewport. */
+#workflow{scroll-margin-top:96px}
+.fitband{padding-bottom:var(--space-12)}
+@media (max-width:760px){
+  #workflow{scroll-margin-top:80px;padding-top:var(--space-8) !important}
 }
 
 /* ====== Client-experience bridge ======
