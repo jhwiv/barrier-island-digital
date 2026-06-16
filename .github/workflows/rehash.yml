@@ -1,0 +1,53 @@
+name: Rehash assets on push
+
+# Why: produces content-hashed filenames for styles.css and main.js so
+# every CSS/JS change ships under a brand-new URL. This is the only
+# reliable cache-busting strategy when assets are served with the
+# Cache-Control: immutable headers in _headers, and when a service
+# worker (sw.js) cache-firsts same-origin static files.
+#
+# Without this, editing styles.css in place leaves Chrome iOS / the SW /
+# Cloudflare edge serving the old bytes for up to a year.
+#
+# This workflow replaces the standalone version.yml stamping job — the
+# rehash script also writes version.json, so both happen in one commit.
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rehash-assets
+  cancel-in-progress: false
+
+jobs:
+  rehash:
+    # Skip when this very workflow's previous run already pushed the rehash
+    # commit (it's tagged with [skip ci] in the message, but be explicit).
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run rehash
+        run: |
+          chmod +x scripts/rehash-assets.sh
+          bash scripts/rehash-assets.sh
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No asset changes — nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: rehash assets + stamp version.json [skip ci]"
+          git push

@@ -21,7 +21,7 @@
 <link rel="manifest" href="/site.webmanifest?v=20260601b">
 <meta name="theme-color" content="#1c2840">
 <link href="https://api.fontshare.com/v2/css?f[]=boska@400,500,700&f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.c92e55a5.css">
+<link rel="stylesheet" href="styles.62c78a32.css">
 
 <!-- ============ Service worker: network-first HTML so users never see stale deploys ============
      After first install, every future deploy is picked up automatically on the next navigation.
@@ -33,7 +33,7 @@
   if (location.hostname === 'localhost' || location.hostname.endsWith('.pages.dev')) return;
   window.addEventListener('load', function(){
     // Versioned URL forces the browser to fetch a new sw.js when version bumps.
-    navigator.serviceWorker.register('/sw.js?v=20260609a').then(function(reg){
+    navigator.serviceWorker.register('/sw.js?v=20260616a').then(function(reg){
       if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
       reg.addEventListener('updatefound', function(){
         var nw = reg.installing;
@@ -421,7 +421,7 @@
   </div>
 </footer>
 
-<script src="main.62c7da25.js"></script>
+<script src="main.2a7b60ad.js"></script>
 
 
 </body>

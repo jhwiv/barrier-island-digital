@@ -6,7 +6,7 @@
 // clear their cache again. After the first install, every future deploy is
 // picked up automatically on the next navigation.
 
-const CACHE = 'bid-v20260613c';
+const CACHE = 'bid-v62c78a322a7b60ad';
 
 self.addEventListener('install', e => {
   // Pre-cache the shell, but don't block install on it.
